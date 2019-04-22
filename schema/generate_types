@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# generate_types
+#
+#   Generate schema data structures
+#
+#	usage "./generate_types [-d]"
+#
+#           -d = Dan's quicktype path
+
+# check command line args
+if test $# -gt 1; then
+    echo "usage: $0 [-d]"
+    exit 1
+fi
+
+# set command for dan and will
+if test $# -gt 0 && test $1 = '-d'; then
+    # dan
+    COMMAND="node /d/Temp/class/quicktype/dist/cli/index.js"
+    AUTOCRLF=true
+else
+    # will
+    COMMAND=quicktype
+    AUTOCRLF=false
+fi
+
+# set files
+FRONTEND_API_OUT="../frontend/api/wireModels.ts"
+NET_API_OUT="../api/KnowledgeGraph/KnowledgeGraph/DataTransferObjects/WireModels.cs"
+NET_KGBUILDER_OUT="../api/KnowledgeGraph/KnowledgeGraph/DatabaseObjects/DatabaseModels.cs"
+
+# generate files
+$COMMAND --src-lang schema -o $FRONTEND_API_OUT ./quicktype/api/*
+$COMMAND --src-lang schema --features attributes-only --namespace KnowledgeGraph.DataTransferObjects -o $NET_API_OUT ./quicktype/api/*
+$COMMAND --src-lang schema --features attributes-only --namespace KnowledgeGraph.DatabaseObjects -o $NET_KGBUILDER_OUT ./quicktype/kg_builder/*
+
+# get out if previous commands failed
+if test $? -ne 0; then
+    exit 1
+fi
+
+# add compiler flags for C#
+NET_COMPILER_PRE='#pragma warning disable 1591'
+NET_COMPILER_POST='#pragma warning restore 1591'
+
+echo -e "$NET_COMPILER_PRE\n$(cat $NET_API_OUT)" > $NET_API_OUT
+echo $NET_COMPILER_POST >> $NET_API_OUT
+
+echo -e "$NET_COMPILER_PRE\n$(cat $NET_KGBUILDER_OUT)" > $NET_KGBUILDER_OUT
+echo $NET_COMPILER_POST >> $NET_KGBUILDER_OUT
+
+# replace line endings
+if test $AUTOCRLF = "true"; then
+    sed -i 's/$/\r/' $FRONTEND_API_OUT
+    sed -i 's/$/\r/' $NET_API_OUT
+    sed -i 's/$/\r/' $NET_KGBUILDER_OUT
+fi
+
+exit 0

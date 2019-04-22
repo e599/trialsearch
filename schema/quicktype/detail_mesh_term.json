@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_mesh_term.json",
+  "title": "Detail Mesh Term",
+  "description": "the detail mesh term of a clinical trial",
+  "type": "object",
+  "required": ["new_id", "mesh_term"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "mesh_term": { "type": "string" }
+  }
+}

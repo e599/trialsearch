@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "sex_node.json",
+  "title": "Sex Node",
+  "description": "Database object for Sex",
+  "type": "object",
+  "required": ["new_id", "gender"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "gender": { "type": "string" }
+  }
+}

@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# build_and_run
+#
+#   Update a docker container with new code
+#
+#	usage "./build_and_run name environment
+#
+
+# check command line args
+if test $# -ne 2; then
+    echo "usage: $0 name environment"
+    exit 1
+fi
+
+# container name
+NAME=$1
+ENVIRONMENT=$2
+
+# update the docker container
+docker stop $NAME 2> /dev/null
+docker rm $NAME 2> /dev/null
+docker build -t $NAME:latest .
+docker run -d -p 80:80 --name $NAME -e ASPNETCORE_ENVIRONMENT=$ENVIRONMENT $NAME:latest

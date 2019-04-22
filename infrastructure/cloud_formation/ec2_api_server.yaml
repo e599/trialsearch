@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description:
+  Creates an Ubuntu EC2 with docker.
+
+Parameters:
+  UserName:
+    Type: String
+    Default: kgadmin
+
+  SSHPublicKey:
+    Type: String
+    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin
+
+  KeyName:
+    Description: Keypair name
+    Type: String
+
+  ENV:
+    Description: Environment
+    Type: String
+
+  ImageId:
+    Description: AMI Id
+    Type: String
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.small
+    AllowedValues:
+      - t2.small
+    ConstraintDescription: must be a valid EC2 instance type.
+
+
+Resources:
+
+  NetworkInterface:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId:
+        Fn::ImportValue:
+          !Sub "kgraph-${ENV}-Subnet1Id"
+      GroupSet:
+        - Fn::ImportValue:
+            !Sub "kgraph-${ENV}-SG-SSHWEB"
+
+
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      KeyName: !Ref KeyName
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref NetworkInterface
+          DeviceIndex: '0'
+
+      Tags:
+        -
+          Key: Name
+          Value: !Sub "${ENV}-.NET-API-Server"
+
+      UserData:
+        Fn::Base64:
+          !Sub
+            - |
+              #!/bin/bash -xe
+              adduser ${USERNAME}
+              echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
+              mkdir /home/${USERNAME}/.ssh
+              echo ${SSHKEY} > /home/${USERNAME}/.ssh/authorized_keys
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
+              chmod 700 /home/${USERNAME}/.ssh
+              chmod 600 /home/${USERNAME}/.ssh/authorized_keys
+              # install docker
+              sudo curl -sSL https://get.docker.com/ | sh
+              sudo usermod -aG docker ${USERNAME} # requires log out/in
+              # view results of this script at  /var/log/cloud-init-output.log
+            - USERNAME: !Ref UserName
+              SSHKEY: !Ref SSHPublicKey
+
+  DotnetEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the instance
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub "kgraph-${ENV}-ec2-api-server"
+
+  DotnetEIP:
+    Description: Elastic IP of the dotnet server
+    Value: !Ref DotnetEIP
+    Export:
+      Name: !Sub "kgraph-${ENV}-eip-api-server"

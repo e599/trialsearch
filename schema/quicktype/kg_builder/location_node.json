@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "location_node.json",
+  "title": "Location Node",
+  "description": "Database object for Location",
+  "type": "object",  
+  "required": ["new_id"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "name": { "type": "string" },
+      "city": { "type": "string" },
+      "state": { "type": "string" },
+      "country": { "type": "string" },
+      "zip": { "type": "string" },
+      "lat": { "type": "string" },
+      "lng": { "type": "string" }
+  }
+}

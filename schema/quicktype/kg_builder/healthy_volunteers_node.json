@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "healthy_volunteers_node.json",
+  "title": "Healthy Volunteers Node",
+  "description": "Database object for Healthy Volunteers",
+  "type": "object",
+  "required": ["new_id", "healthy_volunteers"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "healthy_volunteers": { "type": "string" }
+  }
+}

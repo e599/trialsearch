@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description:
+  Creates an EC2 with dotnet nginx server.
+
+Parameters:
+  UserName:
+    Type: String
+    Default: kgadmin
+
+  SSHPublicKey:
+    Type: String
+    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin
+
+  KeyName:
+    Description: Keypair name
+    Type: String
+
+  ENV:
+    Description: Environment
+    Type: String
+
+  ImageId:
+    Description: AMI Id
+    Type: String
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t2.small
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type.
+
+
+Resources:
+
+  NetworkInterface:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId:
+        Fn::ImportValue:
+          !Sub "kgraph-${ENV}-Subnet2Id"
+      GroupSet:
+        - Fn::ImportValue:
+            !Sub "kgraph-${ENV}-SG-SSHWEB"
+        - Fn::ImportValue:
+            !Sub "kgraph-${ENV}-SG-EFS"
+
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      KeyName: !Ref KeyName
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref NetworkInterface
+          DeviceIndex: '0'
+
+      Tags:
+        -
+          Key: Name
+          Value: !Sub "${ENV}-python-batch"
+
+      BlockDeviceMappings:
+        -
+          DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: 24
+            VolumeType: gp2
+
+      UserData:
+        Fn::Base64:
+          !Sub
+            - |
+              #!/bin/bash
+
+              file=/home/startup.log
+              sudo yum update -y
+              adduser ${USERNAME}
+              echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
+              echo "Added kgadmin" >> $file
+              mkdir /home/${USERNAME}/.ssh
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
+
+              # key to issue commands to batch server
+              cat > /home/${USERNAME}/.ssh/id_rsa << EOF
+                <add private key here>
+              EOF
+
+              echo "Adding kgadmin ssh key to auth keys" >> $file
+              echo ${SSHKEY} > /home/${USERNAME}/.ssh/authorized_keys
+              chmod 700 /home/${USERNAME}/.ssh
+              chmod 600 /home/${USERNAME}/.ssh/id_rsa
+              chmod 600 /home/${USERNAME}/.ssh/authorized_keys
+
+              echo "Install packages" >> $file
+              # install required packages
+              sudo yum install -y git
+              sudo amazon-linux-extras install python3
+
+              curl -O https://bootstrap.pypa.io/get-pip.py
+              python3 get-pip.py --user
+              echo 'export PATH=$PATH:/home/kgadmin/.local/bin' >> /home/${USERNAME}/.bash_profile
+
+              # app specific env variables
+              echo 'export KG_ENV=${ENV}' >> /home/${USERNAME}/.bash_profile
+              echo 'export PYTHONPATH=/home/kgadmin/code:/home/kgadmin/code/kg_builder' >> /home/${USERNAME}/.bash_profile
+
+              mkdir -p /home/${USERNAME}/tmp
+
+              echo "Mount efs" >> $file
+              # mount EFS
+              mkdir -p /home/${USERNAME}/efs/data
+              sudo yum -y install amazon-efs-utils
+              sudo mount -t efs ${ESFID}:/ /home/${USERNAME}/efs
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/efs
+
+              # view results of this script at  /var/log/cloud-init-output.log
+            - USERNAME: !Ref UserName
+              SSHKEY: !Ref SSHPublicKey
+              ESFID:  !Sub "kgraph-${ENV}-EFSId"
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the instance
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub "kgraph-${ENV}-ec2-batch-server"

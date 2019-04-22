@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "contact_node.json",
+  "title": "Contact Node",
+  "description": "Database object for Contact",
+  "type": "object",
+  "required": ["new_id"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "first_name": { "type": "string" },
+      "middle_name": { "type": "string" },
+      "last_name": { "type": "string" },
+      "degrees": { "type": "string" },
+      "phone": { "type": "string" },
+      "phone_ext": { "type": "string" },
+      "email": { "type": "string" },
+      "name_title": { "type": "string" },
+      "investigator_full_name": { "type": "string" },
+      "investigator_title": { "type": "string" }
+  }
+}

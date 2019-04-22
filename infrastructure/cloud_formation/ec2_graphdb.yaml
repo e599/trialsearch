@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description:
+  Creates an EC2 with neo4j server.
+
+Parameters:
+  UserName:
+    Type: String
+    Default: kgadmin
+
+  SSHPublicKey:
+    Type: String
+    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin
+
+  KeyName:
+    Description: Keypair name
+    Type: String
+
+  ENV:
+    Description: Environment
+    Type: String
+
+  ImageId:
+    Description: AMI Id
+    Type: String
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.large
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+
+    ConstraintDescription: must be a valid EC2 instance type.
+
+Resources:
+
+  NetworkInterface:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId:
+        Fn::ImportValue:
+          !Sub "kgraph-${ENV}-Subnet2Id"
+      GroupSet:
+        - Fn::ImportValue:
+            !Sub "kgraph-${ENV}-SG-Neo4j"
+        - Fn::ImportValue:
+            !Sub "kgraph-${ENV}-SG-EFS"
+
+
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      KeyName: !Ref KeyName
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref NetworkInterface
+          DeviceIndex: '0'
+      BlockDeviceMappings:
+        -
+          DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 24
+            VolumeType: gp2
+      Tags:
+        -
+          Key: Name
+          Value: !Sub "${ENV}-graphdb"
+
+      UserData:
+        Fn::Base64:
+          !Sub
+            - |
+              #!/bin/bash -xe
+              adduser ${USERNAME}
+              echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
+              mkdir /home/${USERNAME}/.ssh
+              echo ${SSHKEY} > /home/${USERNAME}/.ssh/authorized_keys
+              echo ${SSHKEY_BATCH_SERVER} >> /home/${USERNAME}/.ssh/authorized_keys
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
+              chmod 700 /home/${USERNAME}/.ssh
+              chmod 600 /home/${USERNAME}/.ssh/authorized_keys
+
+              # mount efs
+              sudo mkdir -p /mnt/efs
+
+              git clone https://github.com/aws/efs-utils
+              sudo apt-get -y install binutils
+              ./efs-utils/build-deb.sh
+              sudo apt-get -y install ./build/amazon-efs-utils*deb
+              sudo mount -t efs $(ESFID):/ /mnt/efs
+              chown -R ${USERNAME}.${USERNAME} /mnt/efs
+
+              # view results of this script at  /var/log/cloud-init-output.log
+            - USERNAME: !Ref UserName
+              SSHKEY: !Ref SSHPublicKey
+              SSHKEY_BATCH_SERVER: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGPBr+GV20jEZSoqm+4mhnL32Fk8qNoztsCY0xoxmNtRbpgQW/l6gi8dxVbvWKTAWfAsPePlFybvBa8blyz0IRbBet8MDWHuzlT/c/RYGSML6dmeb7FvHcfWogLXeVbDn+L5uy0RGAv878coB0QyM379lMCIeHi3+SvWfUKx8RhbVkXomADyP+MydzrnbLcH0QDC6biSN561aNuEgQZlTlCTV65o+s71EOQbUd9pY89BdlDJaObj3hM8oZPv45NEIsoRNqh4wKCJM6Ycl11dsW3cPmCemc2LVHmI3dutxXldpwFiA5aAAQiIecMbFZpR8cO4P9bMzimiNCwnHEpSBR
+              ESFID:  !Sub "kgraph-${ENV}-EFSId"
+
+  GraphDBEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the instance
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub "kgraph-${ENV}-ec2-graphdb-server"
+
+  GraphDBEIP:
+    Description: Elastic IP of the graphdb server
+    Value: !Ref GraphDBEIP
+    Export:
+      Name: !Sub "kgraph-${ENV}-eip-graphdb-server"

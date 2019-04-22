@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "clinical_trial_detail_node.json",
+  "title": "Clinical Trial Detail Node",
+  "description": "Database object for Clinical Trial Detail",
+  "type": "object",
+  "required": ["new_id","nct_id"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "nct_id": { "type": "string" },
+      "org_study_id": { "type": "string" },
+      "url": { "type": "string" },
+      "brief_title": { "type": "string" },
+      "official_title": { "type": "string" },
+      "brief_summary": { "type": "string" },          
+      "overall_status": { "type": "string" },
+      "phase": { "type": "string" },
+      "study_type": { "type": "string" },
+      "minimum_age": { "type": "string" },
+      "maximum_age": { "type": "string" },
+      "start_date": { "type": "string" }, 
+      "start_year": { "type": "string" },             
+      "criteria_text": { "type": "string" },
+      "age_ranges":{
+         "type": "array",
+         "items": { 
+             "$ref": "./age_range_node.json"
+          } 
+      },
+      "conditions": {
+         "type": "array",
+         "items": { 
+             "$ref": "./condition_node.json"
+          }
+      },
+      "contacts":{
+         "type": "array",
+         "items": { 
+             "$ref": "./contact_node.json"
+          } 
+      },
+      "genders":{
+         "type": "array",
+         "items": { 
+             "$ref": "./sex_node.json"
+          }
+      },
+      "healthy_volunteers":{
+         "type": "array",
+         "items": { 
+             "$ref": "./healthy_volunteers_node.json"
+          }
+      },
+      "interventions": {
+         "type": "array",
+         "items": { 
+             "$ref": "./intervention_node.json"
+          } 
+      },      
+      "locations": {
+        "type": "array",
+        "items": { 
+            "$ref": "./location_node.json"
+         }
+      },
+      "mesh_terms":{
+         "type": "array",
+         "items": { 
+             "$ref": "./mesh_term_node.json"
+          }
+      },
+      "sponsors": {
+        "type": "array",
+        "items": { 
+            "$ref": "./agency_node.json"
+         }
+      }      
+   }
+}

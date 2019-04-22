@@ -1,0 +1,23 @@
+# Remove global gitignore
+!*
+
+# User-specific
+.vs/
+*.suo
+*.vbproj.user
+*.csproj.user
+*.vshost.exe
+*.vshost.exe.*
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages Directory
+packages/
+
+# Compiled source
+*.pdb
+
+# System files
+Thumbs.db

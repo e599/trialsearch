@@ -1,0 +1,228 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description:
+    VPC with a public subnet and a security group that opens ports 80 , 443 and 22 to the internet
+
+Parameters:
+
+    VpcCIDR:
+        Description: Please enter the IP range (CIDR notation) for this VPC
+        Type: String
+        Default: 10.0.0.0/16
+
+    Subnet1CIDR:
+        Description: Please enter the IP range (CIDR notation) for the first subnet
+        Type: String
+        Default: 10.0.1.0/24
+
+    Subnet2CIDR:
+        Description: Please enter the IP range (CIDR notation) for the first subnet
+        Type: String
+        Default: 10.0.2.0/24
+
+    ENV:
+      Description: Environment
+      Type: String
+
+Resources:
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: !Ref VpcCIDR
+            EnableDnsHostnames: 'true'
+            EnableDnsSupport: 'true'
+            Tags:
+                - Key: Name
+                  Value: !Ref AWS::StackName
+
+    SSHANDWEB:
+        Type: 'AWS::EC2::SecurityGroup'
+        DependsOn: VPC
+        Properties:
+            GroupName: !Sub ${AWS::StackName}_SSH_WEB_INTERNET
+            VpcId: !Ref VPC
+            GroupDescription: port 22 (for ssh), port 80 and port 443 are open to the internet
+            Tags:
+              -
+                Key: Name
+                Value: !Sub ${ENV}_ssh_web_sg
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: '80'
+                  ToPort: '80'
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: '443'
+                  ToPort: '443'
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: '22'
+                  ToPort: '22'
+                  CidrIp: 0.0.0.0/0
+
+    Neo4jSG:
+        Type: 'AWS::EC2::SecurityGroup'
+        DependsOn: VPC
+        Properties:
+            GroupName: !Sub ${AWS::StackName}_NEO4J_SG
+            VpcId: !Ref VPC
+            GroupDescription: port 22 (for ssh), port 7687 and port 7473 are open to the internet
+            Tags:
+              -
+                Key: Name
+                Value: !Sub ${ENV}_neo4j_sg
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: '7687'
+                  ToPort: '7687'
+                  CidrIp: 0.0.0.0/0
+                  Description: Bolt
+                - IpProtocol: tcp
+                  FromPort: '7473'
+                  ToPort: '7473'
+                  CidrIp: 0.0.0.0/0
+                  Description: Browser/HTTPS
+                - IpProtocol: tcp
+                  FromPort: '22'
+                  ToPort: '22'
+                  CidrIp: 0.0.0.0/0
+                  Description: SSH
+
+    InternetGateway:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+                - Key: Name
+                  Value: !Sub ${AWS::StackName} IGW
+
+    InternetGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref InternetGateway
+            VpcId: !Ref VPC
+
+    Subnet1:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            CidrBlock: !Ref Subnet1CIDR
+            MapPublicIpOnLaunch: true
+            Tags:
+                - Key: Name
+                  Value: !Sub ${AWS::StackName} Subnet1
+    Subnet2:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            CidrBlock: !Ref Subnet2CIDR
+            MapPublicIpOnLaunch: true
+            Tags:
+                - Key: Name
+                  Value: !Sub ${AWS::StackName} Subnet2
+
+    RouteTable:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPC
+            Tags:
+                - Key: Name
+                  Value: !Sub ${AWS::StackName} Routes
+
+    DefaultRoute:
+        Type: AWS::EC2::Route
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            RouteTableId: !Ref RouteTable
+            DestinationCidrBlock: 0.0.0.0/0
+            GatewayId: !Ref InternetGateway
+
+    Subnet1RouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            RouteTableId: !Ref RouteTable
+            SubnetId: !Ref Subnet1
+
+    Subnet2RouteTableAssociation:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            RouteTableId: !Ref RouteTable
+            SubnetId: !Ref Subnet2
+
+    EFSSG:
+      Type: AWS::EC2::SecurityGroup
+      DependsOn: VPC
+      Properties:
+        VpcId:
+          Ref: VPC
+        GroupName: !Sub ${AWS::StackName}_EFS_SG
+        GroupDescription: Security group for mount target
+        Tags:
+          -
+            Key: Name
+            Value: !Sub ${ENV}_efs_sg
+        SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '2049'
+          ToPort: '2049'
+          CidrIp: 0.0.0.0/0
+
+    EFS:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          PerformanceMode: generalPurpose
+          FileSystemTags:
+          - Key: Name
+            Value: !Sub "${ENV}-efs"
+
+    MountTarget:
+      Type: AWS::EFS::MountTarget
+      Properties:
+        FileSystemId:
+         Ref: EFS
+        SubnetId:
+          Ref: Subnet2
+        SecurityGroups:
+        - Ref: EFSSG
+
+
+Outputs:
+
+  VPC:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "kgraph-${ENV}-VPCId"
+
+  SUBNET1:
+    Value: !Ref Subnet1
+    Export:
+      Name: !Sub "kgraph-${ENV}-Subnet1Id"
+
+  SUBNET2:
+    Value: !Ref Subnet2
+    Export:
+      Name: !Sub "kgraph-${ENV}-Subnet2Id"
+
+  EFS:
+    Value: !Ref EFS
+    Export:
+      Name: !Sub "kgraph-${ENV}-EFSId"
+
+  SGSSHWEB:
+    Value: !Join
+        - ','
+        - - !Ref SSHANDWEB
+    Export:
+      Name: !Sub "kgraph-${ENV}-SG-SSHWEB"
+
+  SGNeo4j:
+    Value: !Join
+        - ','
+        - - !Ref Neo4jSG
+    Export:
+      Name: !Sub "kgraph-${ENV}-SG-Neo4j"
+
+  SGEFS:
+    Value: !Join
+        - ','
+        - - !Ref EFSSG
+    Export:
+      Name: !Sub "kgraph-${ENV}-SG-EFS"

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "age_range_node.json",
+  "title": "Age Range Node",
+  "description": "Database object for Age Range",
+  "type": "object",
+  "required": ["age_range"],
+  "properties": {
+      "age_range": { "type": "string" }
+  }
+}

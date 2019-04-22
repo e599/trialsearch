@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "condition_node.json",
+  "title": "Condition Node",
+  "description": "Database object for Condition",
+  "type": "object",
+  "required": ["new_id", "condition"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "condition": { "type": "string" }
+  }
+}

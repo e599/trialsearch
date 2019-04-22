@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "mesh_term_node.json",
+  "title": "Mesh Term Node",
+  "description": "Database object for Mesh Term",
+  "type": "object",
+  "required": ["new_id", "mesh_term"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "mesh_term": { "type": "string" }
+  }
+}

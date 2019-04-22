@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "enrollment_status_node.json",
+  "title": "Enrollment Status Node",
+  "description": "Database object for Enrollment Status",
+  "type": "object",
+  "required": ["new_id", "overall_status"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "overall_status": { "type": "string" }
+  }
+}

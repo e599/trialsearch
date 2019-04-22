@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "search_request_defaulted.json",
+  "title": "Search Request Defaulted",
+  "description": "data for the search request, with fields requiring defaults required; NOTE: enum values MUST be lowercase",
+  "type": "object",
+  "required": ["search_term", "page", "results"],
+  "properties": {
+    "search_term": { "type": "string" },
+    "age_range": { "type": "array", "items":{ "type":"string", "enum":["child","adult","older_adult"] }},
+    "condition_id": { "type": "string" },
+    "healthy_volunteers": {"type": "boolean"},
+    "intervention_type": { "type": "array", "items":{ "type":"string", "enum": ["behavioral","biological","combination_product","device","diagnostic_test","dietary_supplement","drug","genetic","other","procedure","radiation"] }},
+    "lat_bottom": { "type": "number" },
+    "lat": { "type": "number" },
+    "lng_right": { "type": "number" },
+    "lng": { "type": "number" },
+    "location_id": { "type": "string" },    
+    "page": { "type": "integer" },
+    "phase": { "type": "array", "items":{ "type":"string", "enum": ["early_phase1","n_a","phase1","phase1_phase2","phase2","phase2_phase3","phase3","phase4"] }},
+    "radius": { "type": "integer" },
+    "results": { "type": "integer" },
+    "sex": { "type": "array", "items":{ "type":"string", "enum": ["female", "male"] }},
+    "sponsor_id": { "type": "string" },
+    "status": { "type": "array", "items":{ "type":"string", "enum": ["active_not_recruiting","completed","enrolling_by_invitation","not_yet_recruiting","recruiting","suspended","terminated","withdrawn","available","no_longer_available","temporarily_not_available","approved_for_marketing","withheld","unknown_status"] }},
+    "start_year": { "type": "array", "items":{"type": "integer"}}
+  }
+}

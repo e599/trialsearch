@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_sex.json",
+  "title": "Detail Sex",
+  "description": "the detail sex of a clinical trial",
+  "type": "object",
+  "required": ["new_id", "gender"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "gender": { "type": "string" }
+  }
+}

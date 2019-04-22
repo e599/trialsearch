@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "year_node.json",
+  "title": "Year Node",
+  "description": "Database object for Year",
+  "type": "object",
+  "required": ["new_id", "year"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "year": { "type": "string" }
+  }
+}

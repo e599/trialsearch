@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "intervention_type_node.json",
+  "title": "Intervention Type Node",
+  "description": "Database object for Intervention Type",
+  "type": "object",
+  "required": ["new_id", "intervention_type"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "intervention_type": { "type": "string" }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "study_type_node",
+  "title": "Study Type Node",
+  "description": "Database object for Study Type",
+  "type": "object",
+  "required": ["new_id", "study_type"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "study_type": { "type": "string" }
+  }
+}

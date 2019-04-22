@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "error_response.json",
+  "title": "Error Response",
+  "description": "data indicating error conditions",
+  "type": "object",
+  "required": ["error_number"],  
+  "properties": {
+      "error_number": {"type": "integer"},
+      "parameter_name": {"type": "string"},
+      "parameter_value": {"type": "string"},
+      "error_description": {"type": "string"}                
+  }
+}

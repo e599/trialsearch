@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "clinical_trial_node.json",
+  "title": "Clinical Trial Node",
+  "description": "Database object for Clinical Trial",
+  "type": "object",
+  "required": ["new_id","nct_id","org_study_id","url","brief_title","official_title","brief_summary"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "nct_id": { "type": "string" },
+      "org_study_id": { "type": "string" },
+      "url": { "type": "string" },
+      "brief_title": { "type": "string" },
+      "official_title": { "type": "string" },
+      "brief_summary": { "type": "string" },          
+      "overall_status": { "type": "string" },
+      "phase": { "type": "string" },
+      "study_type": { "type": "string" },
+      "minimum_age": { "type": "string" },
+      "maximum_age": { "type": "string" },
+      "start_date": { "type": "string" }, 
+      "start_year": { "type": "string" },             
+      "criteria_text": { "type": "string" },
+      "locations": {
+        "type": "array",
+        "items": { 
+            "$ref": "./location_node.json"
+         }
+      }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_healthy_volunteeers.json",
+  "title": "Detail Healthy Volunteers",
+  "description": "the detail healthy volunteers of a clinical trial",
+  "type": "object",
+  "required": ["new_id", "healthy_volunteers"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "healthy_volunteers": { "type": "string" }
+  }
+}

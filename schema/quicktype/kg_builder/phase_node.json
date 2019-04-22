@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "phase_node.json",
+  "title": "Phase Node",
+  "description": "Database object for Phase Status",
+  "type": "object",
+  "required": ["new_id", "phase"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "phase": { "type": "string" }
+  }
+}

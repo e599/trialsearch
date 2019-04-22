@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_link.json",
+  "title": "Detail Link",
+  "description": "the detail links to data from a clinical trial",
+  "type": "object",  
+  "properties": {
+      "condition_id": { "type": "string" },
+      "location_id": { "type": "string" },
+      "sponsor_id": { "type": "string" }      
+  }
+}

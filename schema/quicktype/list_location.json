@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "list_location.json",
+  "title": "List Location",
+  "description": "the list location of a clinical trial",
+  "type": "object",    
+  "properties": {      
+      "latitude": { "type": "number" },
+      "longitude": { "type": "number" }      
+  }
+}

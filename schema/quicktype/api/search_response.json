@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "search_response.json",
+  "title": "Search Response",
+  "description": "data included from the search response",
+  "type": "object",
+  "required": ["results", "page", "last_page", "num_results"],
+  "properties": {
+      "page": {"type": "integer"},
+      "last_page": {"type": "boolean"},
+      "num_results": {"type": "integer"},
+      "results": {
+          "type": "array",
+          "items": { 
+              "$ref": "../list_trial.json"
+           }
+      }
+  }
+}

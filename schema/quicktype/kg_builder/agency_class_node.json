@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "agency_class_node.json",
+  "title": "Agency Class Node",
+  "description": "Database object for AgencyClass",
+  "type": "object",
+  "required": ["new_id", "agency_class"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "agency_class": { "type": "string" }
+  }
+}

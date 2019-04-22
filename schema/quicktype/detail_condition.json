@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_condition.json",
+  "title": "Detail Condition",
+  "description": "the detail condition of a clinical trial",
+  "type": "object",
+  "required": ["new_id", "condition"],
+  "properties": {
+      "new_id": { "type": "string" },
+      "condition": { "type": "string" }
+  }
+}

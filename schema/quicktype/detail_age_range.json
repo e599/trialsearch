@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "detail_age_range.json",
+  "title": "Detail Age Range",
+  "description": "the detail age range of a clinical trial",
+  "type": "object",
+  "required": ["age_range"],
+  "properties": {
+      "age_range": { "type": "string" }
+  }
+}
