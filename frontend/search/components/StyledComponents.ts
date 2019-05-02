@@ -1,6 +1,6 @@
-import { Fragment } from "react"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
+import { animated } from "react-spring"
 
 export const Container = styled.div`
   padding: 20px 30px;
@@ -31,7 +31,6 @@ export const fullWidth = css`
 export const SearchResultsPanel = styled.div`
   overflow: hidden scroll;
   grid-area: results;
-  min-width: 400px;
 `
 
 export const Card = styled.div`
@@ -44,10 +43,11 @@ export const TrialCard = styled.div`
   padding: 32px;
   border-bottom: 1px solid #e7e7e7;
   letter-spacing: 0.3px;
+  background: ${(props: any): string => (props.active ? "mintcream" : "white")};
 
   &:hover {
     cursor: pointer;
-    background: #f9f9f9;
+    background: ${(props: any): string => (props.active ? "mintcream" : "#f9f9f9")};
 
     & > .title {
       color: #4f96d8;
@@ -90,4 +90,18 @@ export const Centered = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`
+
+export const HalfPageDetail = styled(animated.div)`
+  background: white;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  overflow-y: scroll;
+  padding: 24px 40px;
+`
+
+export const SubSection = styled.section`
+  margin: 2.5em 0;
 `

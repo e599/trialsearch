@@ -1,21 +1,19 @@
 import os
 import pandas as pd
 
-from kg_builder.kg_path import project_path
-from kg_builder.kg_path import munge_stage_03
-from kg_builder.kg_path import munge_stage_05
-from kg_builder.kg_path import munge_stage_98
+from kg_builder.util.kg_path import project_path
+from kg_builder.util.kg_path import munge_stage_03
+from kg_builder.util.kg_path import munge_stage_05
+from kg_builder.util.kg_path import munge_stage_98
+
+from kg_builder.util.kg_path import clinical_trial_filename
+from kg_builder.util.kg_path import location_filename
 
 munge_dest_stage_path = os.path.join(project_path, munge_stage_98)
 
-clinical_trial_filename = "node_clinical_trial.csv"
-age_range_filename = "node_age_range.csv"
-location_filename = "node_location.csv"
-
-relationship_filename = "relationship_all.csv"
-
 
 def process_data():
+    """Master function that executes the module."""
     pick_fields(
         munge_stage_03,
         location_filename,
@@ -52,6 +50,7 @@ def pick_fields(
     fields_in_order,
     field_rounding_dict={},
 ):
+    """Exports the requested fields and order into a new file."""
     df = pd.read_csv(
         project_path
         + "/"
@@ -63,7 +62,7 @@ def pick_fields(
     )
     df = df.reindex(columns=fields_in_order)
 
-    # Round floats since since pandas sometimes adds extra decimal places
+    # Optionally rounds fields since pandas sometimes adds extra decimal places.
     for k, v in field_rounding_dict.items():
         df[k] = df[k].apply(lambda x: round(x, v))
 

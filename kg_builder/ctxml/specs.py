@@ -1,7 +1,9 @@
-ct_spec_dict = {
+"""Mapping of XML path sets to desired output nodes."""
+
+full_spec_dict = {
     "ClinicalTrial": {
         "csv_filename_prefix": "node_clinical_trial",
-        "is_enum": False,
+        "is_parent_node": None,
         "field_names": [
             "new_id:ID",
             "nct_id",
@@ -45,7 +47,7 @@ ct_spec_dict = {
     },
     "EnrollmentStatus": {
         "csv_filename_prefix": "node_enrollment_status",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "overall_status",
@@ -59,7 +61,7 @@ ct_spec_dict = {
     },
     "Phase": {
         "csv_filename_prefix": "node_phase",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "phase",
@@ -73,7 +75,7 @@ ct_spec_dict = {
     },
     "StudyType": {
         "csv_filename_prefix": "node_study_type",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "study_type",
@@ -87,7 +89,7 @@ ct_spec_dict = {
     },
     "HealthyVolunteers": {
         "csv_filename_prefix": "node_healthy_volunteers",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "healthy_volunteers",
@@ -101,7 +103,6 @@ ct_spec_dict = {
     },
     "Condition": {
         "csv_filename_prefix": "node_condition",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "condition",
@@ -115,7 +116,6 @@ ct_spec_dict = {
     },
     "Intervention": {
         "csv_filename_prefix": "node_intervention",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "intervention_name",
@@ -129,7 +129,7 @@ ct_spec_dict = {
     },
     "InterventionType": {
         "csv_filename_prefix": "node_intervention_type",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "intervention_type",
@@ -143,7 +143,6 @@ ct_spec_dict = {
     },
     "Agency": {
         "csv_filename_prefix": "node_agency",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "agency",
@@ -169,7 +168,7 @@ ct_spec_dict = {
     },
     "AgencyClass": {
         "csv_filename_prefix": "node_agency_class",
-        "is_enum": True,
+        "is_enum": None,
         "field_names": [
             "new_id:ID",
             "agency_class",
@@ -186,7 +185,6 @@ ct_spec_dict = {
     },
     "Location": {
         "csv_filename_prefix": "node_location",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "name",
@@ -280,7 +278,6 @@ ct_spec_dict = {
     },
     "Relationship": {
         "csv_filename_prefix": "relationship_all",
-        "is_enum": False,
         "field_names": [
             ":START_ID",
             ":END_ID",
@@ -294,7 +291,6 @@ ct_spec_dict = {
     },
     "ConditionMeshTerm": {
         "csv_filename_prefix": "node_condition_mesh_term",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "mesh_term",
@@ -308,7 +304,6 @@ ct_spec_dict = {
     },
     "InterventionMeshTerm": {
         "csv_filename_prefix": "node_intervention_mesh_term",
-        "is_enum": False,
         "field_names": [
             "new_id:ID",
             "mesh_term",

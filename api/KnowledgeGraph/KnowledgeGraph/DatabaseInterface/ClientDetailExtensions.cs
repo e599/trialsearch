@@ -1,26 +1,21 @@
 ﻿using KnowledgeGraph.Common;
-using static KnowledgeGraph.Common.CUtilities;
 using KnowledgeGraph.DatabaseObjects;
 using Neo4jClient.Cypher;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text;
+using static KnowledgeGraph.Common.CUtilities;
 
 namespace KnowledgeGraph.DatabaseInterface
 {
     /// <summary>
-    /// 
+    /// Extensions for Neo4jClient library's classes that are used to create Cypher queries for the detail endpoint.
     /// </summary>
     public static class ClientDetailExtensions
-    {      
+    {
         /// <summary>
-        /// 
+        /// Search for the id using a Cypher Where query.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="new_id"></param>
-        /// <returns></returns>
+        /// <param name="source">The query source.</param>
+        /// <param name="new_id">The id to search for.</param>
+        /// <returns>The modified query source.</returns>
         public static ICypherFluentQuery KGWhere_ID(this ICypherFluentQuery source, string new_id) {
             string sNewIdName = JsonName<ClinicalTrialNode>(nameof(ClinicalTrialNode.NewId));
             string sNewId = EscapeSpecialCharacters(new_id);
@@ -29,20 +24,20 @@ namespace KnowledgeGraph.DatabaseInterface
         }
 
         /// <summary>
-        /// 
+        /// Collect all the information about the Clinical Trial and create a Cypher query to return it.
         /// </summary>
-        /// <param name="source"></param>        
-        /// <returns></returns>
+        /// <param name="source">The query source.</param>    
+        /// <returns>The modified query source.</returns>
         public static ICypherFluentQuery KGWith_CollectDetail(this ICypherFluentQuery source) {
             string sAgeRangesName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.AgeRanges));
             string sConditionsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Conditions));
             string sContactsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Contacts));
             string sGendersName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Genders));
             string sHealthyVolunteersName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.HealthyVolunteers));
-            string sInterventionsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Interventions));            
+            string sInterventionsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Interventions));
             string sLocationsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Locations));
             string sMeshTermsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.MeshTerms));
-            string sSponsorsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Sponsors));            
+            string sSponsorsName = JsonName<ClinicalTrialDetailNode>(nameof(ClinicalTrialDetailNode.Sponsors));
 
             return source.OptionalMatch($"(c)-[:{Rel.HAS_INCLUSION_CRITERION}]->(a1:{Nodes.AgeRange})")
                          .With($"c, arrays{{.*,a1s:collect(a1)}}")
@@ -68,7 +63,7 @@ namespace KnowledgeGraph.DatabaseInterface
                                      + $"{sContactsName}:arrays.a3s,"
                                      + $"{sGendersName}:arrays.a4s,"
                                      + $"{sHealthyVolunteersName}:arrays.a5s,"
-                                     + $"{sInterventionsName}:arrays.a6s,"                                     
+                                     + $"{sInterventionsName}:arrays.a6s,"
                                      + $"{sLocationsName}:arrays.a7s,"
                                      + $"{sMeshTermsName}:arrays.a8s,"
                                      + $"{sSponsorsName}:arrays.a9s}}");

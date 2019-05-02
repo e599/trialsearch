@@ -24,13 +24,18 @@ namespace KnowledgeGraphSdk.Models
         /// <summary>
         /// Initializes a new instance of the SearchResponse class.
         /// </summary>
-        public SearchResponse(long? numResults = default(long?), long? page = default(long?), IList<ClinicalTrial> results = default(IList<ClinicalTrial>), long? totalPages = default(long?))
+        public SearchResponse(bool? lastPage = default(bool?), long? numResults = default(long?), long? page = default(long?), IList<ListClinicalTrial> results = default(IList<ListClinicalTrial>))
         {
+            LastPage = lastPage;
             NumResults = numResults;
             Page = page;
             Results = results;
-            TotalPages = totalPages;
         }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "last_page")]
+        public bool? LastPage { get; set; }
 
         /// <summary>
         /// </summary>
@@ -45,12 +50,7 @@ namespace KnowledgeGraphSdk.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "results")]
-        public IList<ClinicalTrial> Results { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "total_pages")]
-        public long? TotalPages { get; set; }
+        public IList<ListClinicalTrial> Results { get; set; }
 
     }
 }

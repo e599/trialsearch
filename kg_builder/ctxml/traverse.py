@@ -1,11 +1,13 @@
-
 from kg_builder.ctxml.writers import write_node
 from kg_builder.ctxml.writers import write_relationship
 from kg_builder.ctxml.writers import write_relationship_via_ids
 from kg_builder.ctxml.writers import write_xml_relationship
 
 
-def extract_xml_file_to_csv(root):
+def extract_xml_file(root):
+    """Writes nodes and relationships to CSV files while traversing an XML tree."""
+
+    # Writes parent node from root level XML paths.
     write_node(
         "ClinicalTrial",
         "clinical_trial",
@@ -13,8 +15,14 @@ def extract_xml_file_to_csv(root):
         required_fields=["nct_id"],
         fields_to_clean=["brief_summary", "criteria_text"],
     )
+
+    # Writes another node from root level XML paths.
     write_node("EnrollmentStatus", "overall_status", root)
+
+    # Writes relationship between the last written nodes of start type and end type.
     write_relationship("ClinicalTrial", "HAS_ENROLLMENT_STATUS", "EnrollmentStatus")
+
+    # And so on...
     write_node("Phase", "phase", root)
     write_relationship("ClinicalTrial", "HAS_PHASE", "Phase")
     write_node("StudyType", "study_type", root, required_fields=["study_type"])
@@ -23,6 +31,8 @@ def extract_xml_file_to_csv(root):
     write_relationship("ClinicalTrial", "HAS_INCLUSION_CRITERION", "HealthyVolunteers")
 
     condition_id_list = []
+
+    # Iterates over the applicable sub-tree for the XML extraction of this node type.
     for condition in root.iter("condition"):
         condition_id_list.append(write_node("Condition", "condition", condition))
         write_relationship("ClinicalTrial", "STUDIES", "Condition")
@@ -34,6 +44,7 @@ def extract_xml_file_to_csv(root):
         write_relationship("Intervention", "HAS_CATEGORY", "InterventionType")
         write_relationship("ClinicalTrial", "HAS_INTERVENTION", "Intervention")
 
+    # Writes relationships for the Cartesian product of the Condition and Intervention nodes.
     for condition_id in condition_id_list:
         for intervention_id in intervention_id_list:
             write_relationship_via_ids(intervention_id, "IS_TREATMENT_FOR", condition_id)
@@ -76,6 +87,11 @@ def extract_xml_file_to_csv(root):
         "responsible_party_investigator_affiliation",
         root,
     )
+
+    # Here, the relationship type is not known beforehand
+    # but rather comes from the XML.
+    # In case the XML doesn't have the relationship data we need,
+    # we provide a default relationship.
     write_xml_relationship(
         "ClinicalTrial",
         "responsible_party_type",

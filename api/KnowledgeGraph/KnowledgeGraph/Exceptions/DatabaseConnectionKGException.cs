@@ -7,7 +7,8 @@ using System;
 namespace KnowledgeGraph.Exceptions
 {
     /// <summary>
-    /// 
+    /// An exception class to handle an error connecting to the data source.  
+    /// Return abbreviated information in production.
     /// </summary>
     public class DatabaseConnectionKGException : KGException
     {
@@ -35,7 +36,7 @@ namespace KnowledgeGraph.Exceptions
         /// </summary>
         /// <returns>The error response</returns>        
         public override ErrorResponse CreateErrorResponse() {
-            
+
             ErrorResponse oErrorResponse;
             if (Constants.CurrentEnvironment == eEnvironment.Production) {
                 oErrorResponse = new ErrorResponse() {

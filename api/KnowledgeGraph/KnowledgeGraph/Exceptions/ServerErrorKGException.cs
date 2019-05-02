@@ -1,5 +1,5 @@
-﻿using KnowledgeGraph.DataTransferObjects;
-using KnowledgeGraph.Common;
+﻿using KnowledgeGraph.Common;
+using KnowledgeGraph.DataTransferObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,6 +8,7 @@ namespace KnowledgeGraph.Exceptions
 {
     /// <summary>
     /// An exception class to handle an unexpected error.
+    /// Return abbreviated information in production.
     /// </summary>
     public class ServerErrorKGException : KGException
     {
@@ -42,19 +43,19 @@ namespace KnowledgeGraph.Exceptions
             if (Constants.CurrentEnvironment == eEnvironment.Production) {
                 oErrorResponse = new ErrorResponse() {
                     ErrorNumber = c_iErrorNumber,
-                    ParameterName = null, 
+                    ParameterName = null,
                     ParameterValue = null,
                     ErrorDescription = "An internal error has occurred"
                 };
             } else {
                 oErrorResponse = new ErrorResponse() {
                     ErrorNumber = c_iErrorNumber,
-                    ParameterName = m_sCallingObject, 
-                    ParameterValue = m_sCallingRoutine, 
-                    ErrorDescription = m_oException.Message 
+                    ParameterName = m_sCallingObject,
+                    ParameterValue = m_sCallingRoutine,
+                    ErrorDescription = m_oException.Message
                 };
             }
-          
+
             return oErrorResponse;
         }
 

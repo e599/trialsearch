@@ -16,3 +16,7 @@ declare module "react-cache" {
 type StrMap<T> = {
   [s: string]: T
 }
+
+declare module "phone-formatter" {
+  export function format(input: string, format: string): string
+}

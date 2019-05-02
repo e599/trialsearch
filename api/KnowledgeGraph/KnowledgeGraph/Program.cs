@@ -6,14 +6,14 @@ using System.IO;
 namespace KnowledgeGraph
 {
     /// <summary>
-    /// 
+    /// The Program class. Set options and initialization.
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// 
+        /// The Main method to run the application.  Set options.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args) {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -31,10 +31,10 @@ namespace KnowledgeGraph
         }
 
         /// <summary>
-        /// 
+        /// Create the Web Host Builder.
         /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="args">The command line arguments.</param>
+        /// <returns>The Web Host Builder.</returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();

@@ -11,7 +11,8 @@ using System.IO;
 namespace KnowledgeGraph
 {
     /// <summary>
-    /// Defines the configuration of the Web API applicaiton
+    /// Defines the configuration of the Web API application.
+    /// Adapted from CSCI E-94 class template.
     /// </summary>
     public class Startup
     {
@@ -53,8 +54,7 @@ namespace KnowledgeGraph
 
             // Configure CORS Policy
             //https://weblog.west-wind.com/posts/2016/sep/26/aspnet-core-and-cors-gotchas
-            services.AddCors(options =>
-            {
+            services.AddCors(options => {
                 options.AddPolicy(Constants.CORSPolicy,
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -65,7 +65,7 @@ namespace KnowledgeGraph
             services.AddMvc(config => config.Filters.Add(typeof(GlobalExceptionHandler)));
 
             // Add support for injection of IOptions<T>
-            services.AddOptions();            
+            services.AddOptions();
 
             // Add the class that represnets the settings for the Settings section 
             // in the JSON settings

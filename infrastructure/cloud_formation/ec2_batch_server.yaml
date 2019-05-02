@@ -27,10 +27,11 @@ Parameters:
   InstanceType:
     Description: EC2 instance type
     Type: String
-    Default: t2.medium
+    Default: t2.large
     AllowedValues:
       - t2.small
       - t2.medium
+      - t2.large
     ConstraintDescription: must be a valid EC2 instance type.
 
 
@@ -74,28 +75,25 @@ Resources:
         Fn::Base64:
           !Sub
             - |
-              #!/bin/bash
-
-              file=/home/startup.log
-              sudo yum update -y
+              #!/bin/bash -xe
+              # Add kgadmin user and ssh public key to authorized keys
               adduser ${USERNAME}
               echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
-              echo "Added kgadmin" >> $file
               mkdir /home/${USERNAME}/.ssh
-              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
+              echo ${SSHKEY} > /home/${USERNAME}/.ssh/authorized_keys
 
               # key to issue commands to batch server
               cat > /home/${USERNAME}/.ssh/id_rsa << EOF
-                <add private key here>
+              -----BEGIN RSA PRIVATE KEY-----
+              ...
+              -----END RSA PRIVATE KEY-----
               EOF
 
-              echo "Adding kgadmin ssh key to auth keys" >> $file
-              echo ${SSHKEY} > /home/${USERNAME}/.ssh/authorized_keys
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
               chmod 700 /home/${USERNAME}/.ssh
               chmod 600 /home/${USERNAME}/.ssh/id_rsa
               chmod 600 /home/${USERNAME}/.ssh/authorized_keys
 
-              echo "Install packages" >> $file
               # install required packages
               sudo yum install -y git
               sudo amazon-linux-extras install python3
@@ -110,17 +108,32 @@ Resources:
 
               mkdir -p /home/${USERNAME}/tmp
 
-              echo "Mount efs" >> $file
               # mount EFS
-              mkdir -p /home/${USERNAME}/efs/data
+              mkdir -p /home/${USERNAME}/efs
               sudo yum -y install amazon-efs-utils
-              sudo mount -t efs ${ESFID}:/ /home/${USERNAME}/efs
-              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/efs
+              sudo mount -t efs ${EFSID}:/ /home/${USERNAME}/efs
+              mkdir -p /home/${USERNAME}/efs/data/ct
+              mkdir -p /home/${USERNAME}/efs/data/pubmed
+              chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}
+              sudo echo "${EFSID}:/ /home/${USERNAME}/efs efs defaults,_netdev 0 0" >> /etc/fstab
+
+              # Download mesh ontology
+              curl -s http://data.bioontology.org/ontologies/MESH/submissions/16/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb -o /home/kgadmin/efs/data/pubmed/mesh.ttl &
+
+              # Schedule kg builder as cron job
+              sudo cat > /var/spool/cron/${USERNAME} << EOF
+              # run kg builder on the first day of the month at 00:00
+              0 0 1 * * python3 /home/kgadmin/code/kg_builder/util/kg_master.py &> /home/kgadmin/kg_builder.log
+              EOF
+
+              sudo yum update -y
 
               # view results of this script at  /var/log/cloud-init-output.log
             - USERNAME: !Ref UserName
               SSHKEY: !Ref SSHPublicKey
-              ESFID:  !Sub "kgraph-${ENV}-EFSId"
+              EFSID:
+                Fn::ImportValue:
+                  !Sub "kgraph-${ENV}-EFSId"
 
 Outputs:
   InstanceId:

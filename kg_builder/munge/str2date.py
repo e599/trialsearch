@@ -24,7 +24,6 @@ def dateformats():
     years = ("%Y",)
     months = ("%b", "%B", "")
     days = ("%d", "")
-    # times = ("%I%p", "%I:%M%p", "%H:%M", "")
 
     for year in years:
         for month in months:
@@ -33,7 +32,3 @@ def dateformats():
                     date = " ".join(args)
                     for combo in permutations([year, date]):
                         yield " ".join(combo).strip()
-                    # removed time/times for faster processing
-                    # for time in times:
-                    #     for combo in permutations([year, date, time]):
-                    #         yield " ".join(combo).strip()

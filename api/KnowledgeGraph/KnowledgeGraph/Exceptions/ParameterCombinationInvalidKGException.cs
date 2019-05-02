@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace KnowledgeGraph.Exceptions
 {
     /// <summary>
-    /// An exception class to handle a missing required parameter.
+    /// An exception class to handle an invalid combination of parameters.
     /// </summary>
     public class ParameterCombinationInvalidKGException : KGException
     {
@@ -24,7 +24,7 @@ namespace KnowledgeGraph.Exceptions
         /// <param name="description"></param>
         /// <param name="parameterNames"></param>
         public ParameterCombinationInvalidKGException(string description, params string[] parameterNames) : base() {
-            m_sParameterName = string.Join(", ",parameterNames);
+            m_sParameterName = string.Join(", ", parameterNames);
             m_sDescription = description;
         }
 

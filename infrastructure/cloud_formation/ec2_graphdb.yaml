@@ -64,7 +64,7 @@ Resources:
         -
           DeviceName: "/dev/sda1"
           Ebs:
-            VolumeSize: 24
+            VolumeSize: 50
             VolumeType: gp2
       Tags:
         -
@@ -76,6 +76,7 @@ Resources:
           !Sub
             - |
               #!/bin/bash -xe
+              # Add kgadmin user and ssh public key to authorized keys
               adduser ${USERNAME}
               echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
               mkdir /home/${USERNAME}/.ssh
@@ -87,19 +88,38 @@ Resources:
 
               # mount efs
               sudo mkdir -p /mnt/efs
-
+              cd /home/${USERNAME}/
               git clone https://github.com/aws/efs-utils
               sudo apt-get -y install binutils
-              ./efs-utils/build-deb.sh
+              cd efs-utils
+              ./build-deb.sh
               sudo apt-get -y install ./build/amazon-efs-utils*deb
-              sudo mount -t efs $(ESFID):/ /mnt/efs
+              sudo mount -t efs ${EFSID}:/ /mnt/efs
               chown -R ${USERNAME}.${USERNAME} /mnt/efs
 
+              sudo echo "${EFSID}:/ /mnt/efs efs defaults,_netdev 0 0" >> /etc/fstab
+
+              # update neo4j conf
+              sudo sed -i "/dbms.directories.import=/ s/=.*/=\/mnt\/efs\/data/" /etc/neo4j/neo4j.template
+              sudo sed -i '/^#dbms.tx_log.rotation.retention_policy.* /s/^#//' /etc/neo4j/neo4j.template
+              sudo sed -i "/dbms.tx_log.rotation.retention_policy=/ s/=.*/=false/" /etc/neo4j/neo4j.template
+
+              # install neosemantics plugin
+              curl -s -L https://github.com/jbarrasa/neosemantics/releases/download/3.4.0.2/neosemantics-3.4.0.2.jar -o /var/lib/neo4j/plugins/neosemantics-3.4.0.2.jar &
+              echo "dbms.unmanaged_extension_classes=semantics.extension=/rdf" >> /etc/neo4j/neo4j.template
+
+              # restart neo4j
+              sudo service neo4j restart
+
+              sudo yum update -y
               # view results of this script at  /var/log/cloud-init-output.log
             - USERNAME: !Ref UserName
               SSHKEY: !Ref SSHPublicKey
               SSHKEY_BATCH_SERVER: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGPBr+GV20jEZSoqm+4mhnL32Fk8qNoztsCY0xoxmNtRbpgQW/l6gi8dxVbvWKTAWfAsPePlFybvBa8blyz0IRbBet8MDWHuzlT/c/RYGSML6dmeb7FvHcfWogLXeVbDn+L5uy0RGAv878coB0QyM379lMCIeHi3+SvWfUKx8RhbVkXomADyP+MydzrnbLcH0QDC6biSN561aNuEgQZlTlCTV65o+s71EOQbUd9pY89BdlDJaObj3hM8oZPv45NEIsoRNqh4wKCJM6Ycl11dsW3cPmCemc2LVHmI3dutxXldpwFiA5aAAQiIecMbFZpR8cO4P9bMzimiNCwnHEpSBR
-              ESFID:  !Sub "kgraph-${ENV}-EFSId"
+              EFSID:
+                Fn::ImportValue:
+                  !Sub "kgraph-${ENV}-EFSId"
+
 
   GraphDBEIP:
     Type: AWS::EC2::EIP

@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DatabaseObjects\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

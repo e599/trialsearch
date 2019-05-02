@@ -1,6 +1,6 @@
-import { createCache } from "react-cache"
-import { Convert, SearchRequest, SearchResponse } from "./wireModels"
 import axios from "axios"
+import { createCache } from "react-cache"
+import { Convert, SearchRequest, SearchResponse, DetailResponse } from "./wireModels"
 import { createResource } from "react-cache"
 import "./config"
 
@@ -17,7 +17,7 @@ export const trialsResource = createResource(
   async (searchParams: SearchRequest): Promise<SearchResponse> => {
     const { search_term: term, ...rest } = searchParams
 
-    const arrayKeys = ["age_range", "intervention_type", "phase", "sex", "status"]
+    const arrayKeys = ["age_range", "intervention_type", "phase", "sex", "status", "start_year"]
     for (let key of arrayKeys) {
       const value = (rest as StrMap<unknown>)[key]
       if (value && Array.isArray(value)) {
@@ -32,8 +32,17 @@ export const trialsResource = createResource(
       const response = await axios.get(`/search/${term}`, { params: { ...defaultCoords, ...rest } })
       return Convert.toSearchResponse(JSON.stringify(response.data))
     } catch (error) {
+      console.log("error fetching trials", error)
       return { num_results: 0, page: 0, results: [], last_page: true }
     }
   },
   item => JSON.stringify(item),
+)
+
+export const singleTrialCache = createCache()
+export const singleTrialResource = createResource(
+  async (id: string): Promise<DetailResponse> => {
+    const response = await axios.get(`/trial/${id}`)
+    return Convert.toDetailResponse(JSON.stringify(response.data))
+  },
 )

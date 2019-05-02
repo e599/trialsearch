@@ -16,7 +16,7 @@ type MapProps = {
 
 type BoundingBox = { top: number; right: number; bottom: number; left: number }
 
-export const Map: React.FC<MapProps> = ({ apiKey, initialZoom, initialLat, initalLng }) => {
+export const Map: React.FC<MapProps> = ({ apiKey, initialZoom, initialLat, initalLng, children }) => {
   const mapDomRef = useRef(null)
   const mapOptions = {
     center: { lat: initialLat, lng: initalLng },
@@ -70,7 +70,7 @@ export const Map: React.FC<MapProps> = ({ apiKey, initialZoom, initialLat, inita
     <div style={{ position: "relative", overflow: "hidden" }}>
       <div style={{ width: "100%", height: "100%" }} id="map" key="map" ref={mapDomRef}>
         <Suspense fallback={null}>
-          <Markers gmap={map} />
+          <Markers gmap={map} page={1} />
         </Suspense>
       </div>
 
@@ -100,6 +100,8 @@ export const Map: React.FC<MapProps> = ({ apiKey, initialZoom, initialLat, inita
           )
         )
       })}
+
+      {children}
     </div>
   )
 }

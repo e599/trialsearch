@@ -38,7 +38,10 @@ export default function Index() {
       <Logo />
       <p>Your place to find up to date information on clinical trials</p>
       <Input.Search
-        onSearch={value => Router.push({ pathname: "/search", query: { search_term: value } })}
+        onSearch={value => {
+          if (!value) return
+          Router.push({ pathname: "/search", query: { search_term: value } })
+        }}
         placeholder="search for clinical trials"
         enterButton
         autoFocus

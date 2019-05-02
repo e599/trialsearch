@@ -10,7 +10,7 @@ using static KnowledgeGraph.Common.CUtilities;
 namespace KnowledgeGraph.DatabaseInterface
 {
     /// <summary>
-    /// 
+    /// The Neo4j database interface.  Methods to access Neo4j.
     /// </summary>
     public class Neo4jInterface
     {
@@ -18,19 +18,26 @@ namespace KnowledgeGraph.DatabaseInterface
         private readonly DataTransferObjects.Settings m_oSettings;
 
         /// <summary>
-        /// 
+        /// The constructor.  Initializes the client.
         /// </summary>
-        /// <param name="settings"></param>
+        /// <param name="settings">The strongly typed settings object.</param>
         public Neo4jInterface(DataTransferObjects.Settings settings) {
             m_oSettings = settings;
             ClientInitialize(settings.DatabaseConnectionString, settings.DatabaseUserName, settings.DatabasePassword);
         }
 
+        /// <summary>
+        /// Initialize the Neo4jClient.  Create the search index.
+        /// </summary>
+        /// <param name="connection">The connection string.</param>
+        /// <param name="username">The database username.</param>
+        /// <param name="password">The database password.</param>
         private void ClientInitialize(string connection, string username, string password) {
             try {
                 if (m_oClient == null) {
                     m_oClient = new GraphClient(new Uri(connection), username, password);
                     m_oClient.Connect();
+                    // force recreate the search index if the environment isn't staging (debugging).
                     CreateTextSearchIndex(Constants.CurrentEnvironment != eEnvironment.Staging);
                 }
             } catch (Exception ex) when (NotKGException(ex)) {
@@ -39,6 +46,10 @@ namespace KnowledgeGraph.DatabaseInterface
             }
         }
 
+        /// <summary>
+        /// Create the search index if it doesn't exist or the recreate has been forced.
+        /// </summary>
+        /// <param name="forceRecreate">Drop the index if it exists and rebuild it.</param>
         private void CreateTextSearchIndex(bool forceRecreate = false) {
             try {
                 bool bIndexExists = IndexExists(Constants.TextSearchIndexName);
@@ -57,6 +68,11 @@ namespace KnowledgeGraph.DatabaseInterface
             }
         }
 
+        /// <summary>
+        /// Determine if the index exists.
+        /// </summary>
+        /// <param name="indexName">The name of the index.</param>
+        /// <returns>Whether the index exists.</returns>
         private bool IndexExists(string indexName) {
             try {
                 long iCount = m_oClient.Cypher
@@ -77,10 +93,10 @@ namespace KnowledgeGraph.DatabaseInterface
         }
 
         /// <summary>
-        /// 
+        /// The endpoint for the Clinical Trial Search requests.  Queries Neo4j and returns a response object.
         /// </summary>
-        /// <param name="searchRequest"></param>
-        /// <returns></returns>
+        /// <param name="searchRequest">The request schema object.</param>
+        /// <returns>The search response object.</returns>
         public DataTransferObjects.SearchResponse GetClinicalTrialsList(DataTransferObjects.SearchRequestDefaulted searchRequest) {
             try {
                 ClinicalTrialNode[] oClinicalTrialNodes = GetClinicalTrialNodes(searchRequest);
@@ -93,10 +109,10 @@ namespace KnowledgeGraph.DatabaseInterface
         }
 
         /// <summary>
-        /// 
+        /// The endpoint for the Clinical Trial Detail requests.  Queries Neo4j and returns a detail response object.
         /// </summary>
-        /// <param name="new_id"></param>
-        /// <returns></returns>
+        /// <param name="new_id">The id of the Clinical Trial node.</param>
+        /// <returns>The detail response object.</returns>
         public DataTransferObjects.DetailResponse GetClinicalTrialDetail(string new_id) {
             try {
 
@@ -111,6 +127,11 @@ namespace KnowledgeGraph.DatabaseInterface
             }
         }
 
+        /// <summary>
+        /// Construct and execute the search query with all user requested filters.
+        /// </summary>
+        /// <param name="searchRequest">The search request schema object.</param>
+        /// <returns>An array of nodes for the response.</returns>
         private ClinicalTrialNode[] GetClinicalTrialNodes(DataTransferObjects.SearchRequestDefaulted searchRequest) {
             ClinicalTrialNode[] oClinicalTrialNodes = null;
 
@@ -143,6 +164,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return oClinicalTrialNodes;
         }
 
+        /// <summary>
+        /// Construct and execute the detail query with all data gathered.
+        /// </summary>
+        /// <param name="new_id">The id of the Clinical Trial node.</param>
+        /// <returns>The detail node for the response.</returns>
         private ClinicalTrialDetailNode GetClinicalTrialDetailNode(string new_id) {
             ClinicalTrialDetailNode oClinicalTrialNode = null;
             try {
@@ -161,6 +187,12 @@ namespace KnowledgeGraph.DatabaseInterface
             return oClinicalTrialNode;
         }
 
+        /// <summary>
+        /// Given an array of clinical trial search nodes, construct the search response object to return.
+        /// </summary>
+        /// <param name="clinicalTrialNodes">The array of nodes.</param>
+        /// <param name="searchRequest">The search request schema object.</param>
+        /// <returns>The search response object.</returns>
         private DataTransferObjects.SearchResponse GetSearchResponse(ClinicalTrialNode[] clinicalTrialNodes, DataTransferObjects.SearchRequestDefaulted searchRequest) {
             DataTransferObjects.SearchResponse oSearchResponse = new DataTransferObjects.SearchResponse();
 
@@ -175,6 +207,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return oSearchResponse;
         }
 
+        /// <summary>
+        /// Given an array of clinical trial search nodes, construct the search response Results object to return.
+        /// </summary>
+        /// <param name="clinicalTrialNodes">The array of nodes.</param>
+        /// <returns>The Results response object containing the actual list of Clinical Trials.</returns>
         private DataTransferObjects.ListClinicalTrial[] GetClinicalTrialsResponse(ClinicalTrialNode[] clinicalTrialNodes) {
             List<DataTransferObjects.ListClinicalTrial> lstResults = new List<DataTransferObjects.ListClinicalTrial>();
             if (clinicalTrialNodes == null) { return lstResults.ToArray(); }
@@ -189,11 +226,11 @@ namespace KnowledgeGraph.DatabaseInterface
                     BriefSummary = oClinicalTrialNode.BriefSummary,
                     OverallStatus = oClinicalTrialNode.OverallStatus,
                     Phase = oClinicalTrialNode.Phase,
-                    StudyType = oClinicalTrialNode.StudyType,                    
+                    StudyType = oClinicalTrialNode.StudyType,
                     MinimumAge = oClinicalTrialNode.MinimumAge,
-                    MaximumAge = oClinicalTrialNode.MaximumAge,                    
+                    MaximumAge = oClinicalTrialNode.MaximumAge,
                     StartDate = oClinicalTrialNode.StartDate,
-                    StartYear = oClinicalTrialNode.StartYear,                   
+                    StartYear = oClinicalTrialNode.StartYear,
                     CriteriaText = oClinicalTrialNode.CriteriaText,
                     Locations = GetListLocationResponse(oClinicalTrialNode.Locations)
                 };
@@ -202,6 +239,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstResults.ToArray();
         }
 
+        /// <summary>
+        /// Given a list of location nodes, construct the search response Locations object to return.
+        /// </summary>
+        /// <param name="locationElements">The list of location nodes.</param>
+        /// <returns>The Locations response object containing the list of locations.</returns>
         private DataTransferObjects.ListLocation[] GetListLocationResponse(LocationElement[] locationElements) {
             if (locationElements == null) { return null; }
 
@@ -219,6 +261,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstLocations.ToArray();
         }
 
+        /// <summary>
+        /// Given a clinical trial detail node, contruct the detail response object to return.
+        /// </summary>
+        /// <param name="clinicalTrialDetailNode">The clinical trial detail node.</param>
+        /// <returns>The clinical trial detail response object.</returns>
         private DataTransferObjects.DetailResponse GetDetailResponse(ClinicalTrialDetailNode clinicalTrialDetailNode) {
             return new DataTransferObjects.DetailResponse() {
                 NewId = clinicalTrialDetailNode.NewId,
@@ -241,17 +288,22 @@ namespace KnowledgeGraph.DatabaseInterface
                 Contacts = GetDetailContactsResponse(clinicalTrialDetailNode.Contacts),
                 Genders = GetDetailGendersResponse(clinicalTrialDetailNode.Genders),
                 HealthyVolunteers = GetDetailHealthyVolunteersResponse(clinicalTrialDetailNode.HealthyVolunteers),
-                Interventions = GetDetailInterventionsResponse(clinicalTrialDetailNode.Interventions),                
+                Interventions = GetDetailInterventionsResponse(clinicalTrialDetailNode.Interventions),
                 Locations = GetDetailLocationsResponse(clinicalTrialDetailNode.Locations),
                 MeshTerms = GetDetailMeshTermsResponse(clinicalTrialDetailNode.MeshTerms),
-                Sponsors = GetDetailSponsorsResponse(clinicalTrialDetailNode.Sponsors)                                
+                Sponsors = GetDetailSponsorsResponse(clinicalTrialDetailNode.Sponsors)
             };
         }
 
+        /// <summary>
+        /// Get the AgeRanges element of the clinical trial detail.
+        /// </summary>
+        /// <param name="ageRangeElements">The age range nodes.</param>
+        /// <returns>The AgeRanges element.</returns>
         private DataTransferObjects.DetailAgeRange[] GetDetailAgeRangesResponse(AgeRangeElement[] ageRangeElements) {
             if (ageRangeElements == null) { return null; }
             List<DataTransferObjects.DetailAgeRange> lstAgeRanges = new List<DataTransferObjects.DetailAgeRange>();
-            foreach (AgeRangeElement oAgeRangeElement in ageRangeElements) {                
+            foreach (AgeRangeElement oAgeRangeElement in ageRangeElements) {
                 DataTransferObjects.DetailAgeRange oAgeRange = new DataTransferObjects.DetailAgeRange() {
                     AgeRange = oAgeRangeElement.AgeRange.ToString()
                 };
@@ -260,6 +312,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstAgeRanges.ToArray();
         }
 
+        /// <summary>
+        /// Get the Conditions element of the clinical trial detail.
+        /// </summary>
+        /// <param name="conditionElements">The condition nodes.</param>
+        /// <returns>The Conditions element.</returns>
         private DataTransferObjects.DetailCondition[] GetDetailConditionsResponse(ConditionElement[] conditionElements) {
             if (conditionElements == null) { return null; }
             List<DataTransferObjects.DetailCondition> lstConditions = new List<DataTransferObjects.DetailCondition>();
@@ -273,6 +330,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstConditions.ToArray();
         }
 
+        /// <summary>
+        /// Get the Contacts element of the clinical trial detail.
+        /// </summary>
+        /// <param name="contactElements">The contact nodes.</param>
+        /// <returns>The Contacts element.</returns>
         private DataTransferObjects.DetailContact[] GetDetailContactsResponse(ContactElement[] contactElements) {
             if (contactElements == null) { return null; }
             List<DataTransferObjects.DetailContact> lstContacts = new List<DataTransferObjects.DetailContact>();
@@ -295,6 +357,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstContacts.ToArray();
         }
 
+        /// <summary>
+        /// Get the Genders element of the clinical trial detail.
+        /// </summary>
+        /// <param name="genderElements">The gender nodes.</param>
+        /// <returns>The Genders element.</returns>
         private DataTransferObjects.DetailSex[] GetDetailGendersResponse(GenderElement[] genderElements) {
             if (genderElements == null) { return null; }
             List<DataTransferObjects.DetailSex> lstGenders = new List<DataTransferObjects.DetailSex>();
@@ -308,6 +375,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstGenders.ToArray();
         }
 
+        /// <summary>
+        /// Get the HealthyVolunteers element of the clinical trial detail.
+        /// </summary>
+        /// <param name="healthyVolunteerElements">The healthy volunteers nodes.</param>
+        /// <returns>The HealthyVolunteers element.</returns>
         private DataTransferObjects.DetailHealthyVolunteers[] GetDetailHealthyVolunteersResponse(HealthyVolunteerElement[] healthyVolunteerElements) {
             if (healthyVolunteerElements == null) { return null; }
             List<DataTransferObjects.DetailHealthyVolunteers> lstHealthyVolunteers = new List<DataTransferObjects.DetailHealthyVolunteers>();
@@ -321,6 +393,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstHealthyVolunteers.ToArray();
         }
 
+        /// <summary>
+        /// Get the Interventions element of the clinical trial detail.
+        /// </summary>
+        /// <param name="interventionElements">The intervention nodes.</param>
+        /// <returns>The Interventions element.</returns>
         private DataTransferObjects.DetailIntervention[] GetDetailInterventionsResponse(InterventionElement[] interventionElements) {
             if (interventionElements == null) { return null; }
             List<DataTransferObjects.DetailIntervention> lstInterventions = new List<DataTransferObjects.DetailIntervention>();
@@ -333,7 +410,12 @@ namespace KnowledgeGraph.DatabaseInterface
             }
             return lstInterventions.ToArray();
         }
-        
+
+        /// <summary>
+        /// Get the Locations element of the clinical trial detail.
+        /// </summary>
+        /// <param name="locationElements">The location nodes.</param>
+        /// <returns>The Locations element.</returns>
         private DataTransferObjects.DetailLocation[] GetDetailLocationsResponse(LocationElement[] locationElements) {
             if (locationElements == null) { return null; }
             List<DataTransferObjects.DetailLocation> lstLocations = new List<DataTransferObjects.DetailLocation>();
@@ -353,6 +435,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstLocations.ToArray();
         }
 
+        /// <summary>
+        /// Get the MeshTerms element of the clinical trial detail.
+        /// </summary>
+        /// <param name="MeshTermElements">The mesh term nodes.</param>
+        /// <returns>The MeshTerms element.</returns>
         private DataTransferObjects.DetailMeshTerm[] GetDetailMeshTermsResponse(MeshTermElement[] MeshTermElements) {
             if (MeshTermElements == null) { return null; }
             List<DataTransferObjects.DetailMeshTerm> lstMeshTerms = new List<DataTransferObjects.DetailMeshTerm>();
@@ -366,6 +453,11 @@ namespace KnowledgeGraph.DatabaseInterface
             return lstMeshTerms.ToArray();
         }
 
+        /// <summary>
+        /// Get the Sponsors element of the clinical trial detail.
+        /// </summary>
+        /// <param name="sponsorElements">The agency nodes.</param>
+        /// <returns>The Sponsors element.</returns>
         private DataTransferObjects.DetailAgency[] GetDetailSponsorsResponse(SponsorElement[] sponsorElements) {
             if (sponsorElements == null) { return null; }
             List<DataTransferObjects.DetailAgency> lstSponsors = new List<DataTransferObjects.DetailAgency>();
@@ -378,7 +470,12 @@ namespace KnowledgeGraph.DatabaseInterface
             }
             return lstSponsors.ToArray();
         }
-            
+
+        /// <summary>
+        /// Whether the exception is a known type.
+        /// </summary>
+        /// <param name="e">The exception.</param>
+        /// <returns>Whether it's a KGException.</returns>
         private bool NotKGException(Exception e) {
             return !(e is KGException);
         }

@@ -7,17 +7,18 @@ using System.Text;
 namespace KnowledgeGraph.Common
 {
     /// <summary>
-    /// 
+    /// Generic extension methods added to classes.
     /// </summary>
     public static class Extensions
     {
         /// <summary>
-        /// 
+        /// Get the string representation of an enum from it's converter.
+        /// Return success.
         /// </summary>
-        /// <param name="converter"></param>
-        /// <param name="untypedValue"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="converter">The converter to use.</param>
+        /// <param name="untypedValue">The enumerator.</param>
+        /// <param name="value">The enumerator's string representation.</param>
+        /// <returns>Success or failure.</returns>
         public static bool EnumValue(this JsonConverter converter, object untypedValue, out string value) {
             try {
                 StringBuilder sb = new StringBuilder();
@@ -29,20 +30,21 @@ namespace KnowledgeGraph.Common
                     value = sb.ToString().Replace("\"", "");
                     return true;
                 }
-            } catch(Exception) {
+            } catch (Exception) {
                 value = null;
                 return false;
-            }            
+            }
         }
 
         /// <summary>
+        /// Get the enumerator for a string from the enumerator's converter.
         /// NOTE: Enum values MUST be lowercase in the schema for this to work. (Currently just the Search Request parameters.)
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="converter"></param>
-        /// <param name="existingValue"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The enumerator type.</typeparam>
+        /// <param name="converter">The converter to use.</param>
+        /// <param name="existingValue">The string representation of the enumerator.</param>
+        /// <param name="value">The enumerator.</param>
+        /// <returns>Success or failure.</returns>
         public static bool ConvertEnum<T>(this JsonConverter converter, string existingValue, out object value) {
             try {
                 StringBuilder sb = new StringBuilder();
@@ -55,14 +57,14 @@ namespace KnowledgeGraph.Common
             } catch (Exception) {
                 value = null;
                 return false;
-            }            
+            }
         }
 
         /// <summary>
-        /// 
+        /// Print a list to a quoted delimited string.
         /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
+        /// <param name="list">The list to print to a string.</param>
+        /// <returns>The quoted delimited string.</returns>
         public static string PrintQuotedDelimited(this List<string> list) {
             StringBuilder sb = new StringBuilder();
             foreach (string sItem in list) {

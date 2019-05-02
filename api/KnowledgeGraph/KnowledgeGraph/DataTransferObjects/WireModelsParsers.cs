@@ -7,22 +7,23 @@ using static KnowledgeGraph.Common.CUtilities;
 namespace KnowledgeGraph.DataTransferObjects
 {
     /// <summary>
-    /// 
+    /// Parse the received API request and build the SearchRequestDefaulted object
+    /// which has non-optional values for required variables.
     /// </summary>
     public class SearchRequestParser
     {
         private IQueryCollection m_oKeyValuePairs;
-        
+
         /// <summary>
-        /// 
+        /// The search request object with all required values either set or defaulted.
         /// </summary>
         public SearchRequestDefaulted SearchRequest { get; } = new SearchRequestDefaulted();
 
         /// <summary>
-        /// 
+        /// Parse the querystring keyValuePairs and generate the search request object.
         /// </summary>
-        /// <param name="searchTerm"></param>
-        /// <param name="keyValuePairs"></param>
+        /// <param name="searchTerm">The search request text.</param>
+        /// <param name="keyValuePairs">The querystring key/value pairs.</param>
         public SearchRequestParser(string searchTerm, IQueryCollection keyValuePairs) {
             m_oKeyValuePairs = keyValuePairs;
             ValidateKeyPairs();
@@ -34,7 +35,7 @@ namespace KnowledgeGraph.DataTransferObjects
             SearchRequest.Lng = ParseLng(nameof(SearchRequest.Lng));
             SearchRequest.Radius = ParseLong(nameof(SearchRequest.Radius), 1, 1000);
             SearchRequest.LatBottom = ParseLat(nameof(SearchRequest.LatBottom));
-            SearchRequest.LngRight = ParseLng(nameof(SearchRequest.LngRight));            
+            SearchRequest.LngRight = ParseLng(nameof(SearchRequest.LngRight));
             SearchRequest.Phase = ParsePhase();
             SearchRequest.Status = ParseStatus();
             SearchRequest.InterventionType = ParseInterventionType();
@@ -47,7 +48,12 @@ namespace KnowledgeGraph.DataTransferObjects
             ValidateSearchRequestDefaulted();
         }
 
-        private bool? ParseBoolean(string propertyName) {                        
+        /// <summary>
+        /// Parse and validate a boolean value.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <returns>The boolean or null.</returns>
+        private bool? ParseBoolean(string propertyName) {
             string sValueName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sValueName, out string sValue)) { return null; }
             if (!bool.TryParse(sValue, out bool bValue)) {
@@ -56,13 +62,32 @@ namespace KnowledgeGraph.DataTransferObjects
             return bValue;
         }
 
-        private string ParseString(string propertyName) {            
+        /// <summary>
+        /// Parse and validate a string value.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <returns>The string or null.</returns>
+        private string ParseString(string propertyName) {
             string sValueName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sValueName, out string sValue)) { return null; }
-            return sValue;
+
+            if (sValue == null) {
+                throw new ParameterCannotBeNullKGException(sValueName);
+            }
+            if (sValue.Trim().Length < 1) {
+                throw new ParameterInvalidKGException(sValueName, sValue);
+            }
+            return sValue.Trim();
         }
 
-        private long? ParseLong(string propertyName, long? lowerBound = null, long? upperBound = null) {                        
+        /// <summary>
+        /// Parse a long value and optionally apply bounds to it, throwing appropriate exceptions.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <param name="lowerBound">The lower bound of the long.</param>
+        /// <param name="upperBound">The upper bound of the long.</param>
+        /// <returns>The long or null.</returns>
+        private long? ParseLong(string propertyName, long? lowerBound = null, long? upperBound = null) {
             string sValueName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sValueName, out string sValue)) { return null; }
             if (!long.TryParse(sValue, out long lValue)) {
@@ -77,6 +102,13 @@ namespace KnowledgeGraph.DataTransferObjects
             return lValue;
         }
 
+        /// <summary>
+        /// Parse a list of longs, optionally applying lower and/or upper bounds to each value, throwing appropriate exceptions.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <param name="lowerBound">The lower bound of each long.</param>
+        /// <param name="upperBound">The upper bound of each long.</param>
+        /// <returns>The list of parsed longs or null.</returns>
         private long[] ParseLongList(string propertyName, long? lowerBound = null, long? upperBound = null) {
             string sValueName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sValueName, out string sValueList)) { return null; }
@@ -98,7 +130,11 @@ namespace KnowledgeGraph.DataTransferObjects
             return lstValue.ToArray();
         }
 
-        private AgeRange[] ParseAgeRange() {            
+        /// <summary>
+        /// Parse an Age Range enumerator list as a string into a list of valid enumerators.
+        /// </summary>
+        /// <returns>The enumerator list.</returns>
+        private AgeRange[] ParseAgeRange() {
             string sAgeRangeName = JsonName<SearchRequest>(nameof(SearchRequest.AgeRange));
             if (!GetComponent(sAgeRangeName, out string sAgeRangeList)) { return null; }
 
@@ -113,7 +149,12 @@ namespace KnowledgeGraph.DataTransferObjects
             return lstAgeRange.ToArray();
         }
 
-        private double? ParseLat(string propertyName) {                        
+        /// <summary>
+        /// Parse and validate a latitude value.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <returns>The latitude.</returns>
+        private double? ParseLat(string propertyName) {
             string sLatitudeName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sLatitudeName, out string sLatitude)) { return null; }
             if (!double.TryParse(sLatitude, out double dLatitude)) {
@@ -125,7 +166,12 @@ namespace KnowledgeGraph.DataTransferObjects
             return dLatitude;
         }
 
-        private double? ParseLng(string propertyName) {                        
+        /// <summary>
+        /// Parse and validate a longitude value.
+        /// </summary>
+        /// <param name="propertyName">The name of the searchrequest property.</param>
+        /// <returns>The longitude.</returns>
+        private double? ParseLng(string propertyName) {
             string sLongitudeName = JsonName<SearchRequest>(propertyName);
             if (!GetComponent(sLongitudeName, out string sLongitude)) { return null; }
             if (!double.TryParse(sLongitude, out double dLongitude)) {
@@ -136,8 +182,12 @@ namespace KnowledgeGraph.DataTransferObjects
             }
             return dLongitude;
         }
-               
-        private Phase[] ParsePhase() {            
+
+        /// <summary>
+        /// Parse a Phase enumerator list as a string into a list of valid enumerators.
+        /// </summary>
+        /// <returns>The enumerator list.</returns>
+        private Phase[] ParsePhase() {
             string sPhaseName = JsonName<SearchRequest>(nameof(SearchRequest.Phase));
             if (!GetComponent(sPhaseName, out string sPhaseList)) { return null; }
 
@@ -152,11 +202,15 @@ namespace KnowledgeGraph.DataTransferObjects
             return lstPhase.ToArray();
         }
 
-        private Sex[] ParseSex() {            
+        /// <summary>
+        /// Parse a Sex enumerator list as a string into a list of valid enumerators.
+        /// </summary>
+        /// <returns>The enumerator list.</returns>
+        private Sex[] ParseSex() {
             string sSexName = JsonName<SearchRequest>(nameof(SearchRequest.Sex));
             if (!GetComponent(sSexName, out string sSexList)) { return null; }
 
-            List<Sex> lstSex = new List<Sex>();            
+            List<Sex> lstSex = new List<Sex>();
             foreach (string sSex in sSexList.Split(Constants.QueryStringDelimiter)) {
                 if (!new SexConverter().ConvertEnum<Sex>(sSex.Trim(), out object oSex)) {
                     throw new ParameterInvalidKGException(sSexName, sSex);
@@ -165,9 +219,13 @@ namespace KnowledgeGraph.DataTransferObjects
                 lstSex.Add((Sex)oSex);
             }
             return lstSex.ToArray();
-        }        
+        }
 
-        private Status[] ParseStatus() {            
+        /// <summary>
+        /// Parse a Status enumerator list as a string into a list of valid enumerators.
+        /// </summary>
+        /// <returns>The enumerator list.</returns>
+        private Status[] ParseStatus() {
             string sStatusName = JsonName<SearchRequest>(nameof(SearchRequest.Status));
             if (!GetComponent(sStatusName, out string sStatusList)) { return null; }
 
@@ -181,8 +239,12 @@ namespace KnowledgeGraph.DataTransferObjects
             }
             return lstStatus.ToArray();
         }
-        
-        private InterventionType[] ParseInterventionType() {            
+
+        /// <summary>
+        /// Parse an Intervention Type enumerator list as a string into a list of valid enumerators.
+        /// </summary>
+        /// <returns>The enumerator list.</returns>
+        private InterventionType[] ParseInterventionType() {
             string sInterventionTypeName = JsonName<SearchRequest>(nameof(SearchRequest.InterventionType));
             if (!GetComponent(sInterventionTypeName, out string sInterventionTypeList)) { return null; }
 
@@ -195,8 +257,13 @@ namespace KnowledgeGraph.DataTransferObjects
                 lstInterventionType.Add((InterventionType)oInterventionType);
             }
             return lstInterventionType.ToArray();
-        }        
+        }
 
+        /// <summary>
+        /// Validate and trim a search term passed.
+        /// </summary>
+        /// <param name="searchTerm">The search term.</param>
+        /// <returns>The validated search term.</returns>
         private string ValidateSearchTerm(string searchTerm) {
             string sSearchName = JsonName<SearchRequest>(nameof(SearchRequest.SearchTerm));
             if (searchTerm == null) {
@@ -208,6 +275,9 @@ namespace KnowledgeGraph.DataTransferObjects
             return searchTerm.Trim();
         }
 
+        /// <summary>
+        /// Validate all query string parameters against valid query string parameters.
+        /// </summary>
         private void ValidateKeyPairs() {
             List<string> lstValidKeys = JsonNames<SearchRequest>();
             foreach (string sKey in m_oKeyValuePairs.Keys) {
@@ -217,12 +287,18 @@ namespace KnowledgeGraph.DataTransferObjects
             }
         }
 
+        /// <summary>
+        /// Post-Validation of the created search request object.
+        /// </summary>
         private void ValidateSearchRequestDefaulted() {
             ValidateGps();
         }
 
+        /// <summary>
+        /// Validate the querystring Gps parameters for invalid combinations and throw appropriate exceptions.
+        /// </summary>
         private void ValidateGps() {
-            if(SearchRequest.Lat == null && SearchRequest.Lng == null && SearchRequest.Radius == null && SearchRequest.LatBottom == null && SearchRequest.LngRight == null) { return; }
+            if (SearchRequest.Lat == null && SearchRequest.Lng == null && SearchRequest.Radius == null && SearchRequest.LatBottom == null && SearchRequest.LngRight == null) { return; }
 
             bool bInvalidCombination = false;
             string sLatName = JsonName<SearchRequest>(nameof(SearchRequest.Lat));
@@ -241,9 +317,15 @@ namespace KnowledgeGraph.DataTransferObjects
 
             if (bInvalidCombination) {
                 throw new ParameterCombinationInvalidKGException($"({sLatName}, {sLngName}), and either '{sRadiusName}' or ({sLatBottomName}, {sLngRightName}) but not both, must be provided for GPS queries.", sLatName, sLngName, sRadiusName, sLatBottomName, sLngRightName);
-            }            
+            }
         }
 
+        /// <summary>
+        /// Get a query string component and return success.
+        /// </summary>
+        /// <param name="key">The query string key.</param>
+        /// <param name="component">The query string value.</param>
+        /// <returns>Whether the key was found.</returns>
         private bool GetComponent(string key, out string component) {
             if (m_oKeyValuePairs.ContainsKey(key)) {
                 component = m_oKeyValuePairs[key];

@@ -17,7 +17,7 @@
     "lng": { "type": "number" },
     "location_id": { "type": "string" },    
     "page": { "type": "integer" },
-    "phase": { "type": "array", "items":{ "type":"string", "enum": ["early_phase1","n_a","phase1","phase1_phase2","phase2","phase2_phase3","phase3","phase4"] }},
+    "phase": { "type": "array", "items":{ "type":"string", "enum": ["n_a","phase1","phase2","phase3","phase4"] }},
     "radius": { "type": "integer" },
     "results": { "type": "integer" },
     "sex": { "type": "array", "items":{ "type":"string", "enum": ["female", "male"] }},

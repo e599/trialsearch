@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace KnowledgeGraph.Exceptions
 {
     /// <summary>
-    /// An exception class to handle a missing required parameter.
+    /// An exception class to handle a parameter name that isn't recognized.
     /// </summary>
     public class ParameterNotRecognizedKGException : KGException
     {

@@ -66,6 +66,7 @@ Resources:
           !Sub
             - |
               #!/bin/bash -xe
+              # Add kgadmin user and ssh public key to authorized keys
               adduser ${USERNAME}
               echo ${USERNAME} 'ALL=(ALL) NOPASSWD:ALL'>>/etc/sudoers.d/${USERNAME}
               mkdir /home/${USERNAME}/.ssh
@@ -73,9 +74,22 @@ Resources:
               chown -R ${USERNAME}.${USERNAME} /home/${USERNAME}/.ssh
               chmod 700 /home/${USERNAME}/.ssh
               chmod 600 /home/${USERNAME}/.ssh/authorized_keys
+
               # install docker
               sudo curl -sSL https://get.docker.com/ | sh
               sudo usermod -aG docker ${USERNAME} # requires log out/in
+
+              # restart docker on reboot
+              sudo cat > /etc/rc.local << EOF
+              #!/bin/bash -e
+              if [ -d "/home/kgadmin/code/e599-KGraph/api/KnowledgeGraph/KnowledgeGraph" ]; then
+                cd /home/kgadmin/code/e599-KGraph/api/KnowledgeGraph/KnowledgeGraph
+                docker start \`docker ps -q -l\`
+              fi
+              exit 0
+              EOF
+              sudo chmod ugo+x /etc/rc.local
+
               # view results of this script at  /var/log/cloud-init-output.log
             - USERNAME: !Ref UserName
               SSHKEY: !Ref SSHPublicKey
@@ -97,3 +111,4 @@ Outputs:
     Value: !Ref DotnetEIP
     Export:
       Name: !Sub "kgraph-${ENV}-eip-api-server"
+

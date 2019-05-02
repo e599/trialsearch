@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace KnowledgeGraph.Exceptions
 {
     /// <summary>
-    /// 
+    /// An exception class to handle a missing requested resource.
     /// </summary>
     public class ResourceNotFoundKGException : KGException
     {

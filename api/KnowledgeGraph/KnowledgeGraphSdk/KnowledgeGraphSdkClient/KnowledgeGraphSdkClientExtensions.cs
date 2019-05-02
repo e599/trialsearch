@@ -43,5 +43,31 @@ namespace KnowledgeGraphSdk
                 }
             }
 
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='newId'>
+            /// </param>
+            public static object ClinicalTrialDetail(this IKnowledgeGraphSdkClient operations, string newId)
+            {
+                return Task.Factory.StartNew(s => ((IKnowledgeGraphSdkClient)s).ClinicalTrialDetailAsync(newId), operations, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='newId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> ClinicalTrialDetailAsync(this IKnowledgeGraphSdkClient operations, string newId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ClinicalTrialDetailWithHttpMessagesAsync(newId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
     }
 }

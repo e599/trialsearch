@@ -80,7 +80,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionalTests.cs" />
+    <Compile Include="Tests_Search.cs" />
+    <Compile Include="TestConstants.cs" />
+    <Compile Include="TestExtensions.cs" />
+    <Compile Include="Tests_Detail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
