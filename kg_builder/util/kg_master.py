@@ -29,12 +29,12 @@ def ct_init():
     """Master function to build the clinical trials graph  from a
     fresh download of clinicaltrials.gov's complete set of XML files."""
 
-    print('kg_master start - ', datetime.datetime.now().isoformat())
+    print('kg_master ct load start - ', datetime.datetime.now().isoformat())
     kg_env = os.environ.get('KG_ENV')
     download_src_files = get_sys_config('download_src_files', kg_env)
     download_url = get_sys_config('download_url', kg_env)
 
-    if download_src_files:
+    if download_src_files == 'True':
 
         # Downloads the file from the web (and overwrites, if necessary).
         print("Downloading source files...")
@@ -48,11 +48,12 @@ def ct_init():
     print("Load graph...")
     load()
 
-    print('kg_master end - ', datetime.datetime.now().isoformat())
+    print('kg_master ct load end - ', datetime.datetime.now().isoformat())
 
     
 # master function to build and link pubmed nodes and mesh ontology to the clinical trials graph    
 def pubmed_init():
+    print('kg_master pubmed load start - ', datetime.datetime.now().isoformat())
     print("Downloading and Extracting Pubmed Nodes")
     # Download Extract pubmed nodes - only new files extracted. old ones preserved
     download_extract_pubmed()
@@ -70,6 +71,7 @@ def pubmed_init():
     # merge to find external key for Mesh Terms related to CTs. Then load
     parse_ct_mesh_relation()
     load_ct_mesh_ontology_relationships()
+    print('kg_master pubmed load end - ', datetime.datetime.now().isoformat())
 
 def init():
     ct_init()
