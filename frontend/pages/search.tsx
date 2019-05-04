@@ -180,7 +180,7 @@ const Search: NextFC<{ query: SearchRequest }> = ({ query }) => {
             </SearchResultsPanel>
 
             <Map
-              apiKey="<GOOGLR_MAPS_API_KEY>"
+              apiKey="<GOOGLE_MAPS_API_KEY>"
               initialLat={37.09024}
               initalLng={-95.712891}
               initialZoom={4}

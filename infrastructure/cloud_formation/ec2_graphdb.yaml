@@ -10,7 +10,12 @@ Parameters:
 
   SSHPublicKey:
     Type: String
-    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin
+
+  BatchServerPublicKey:
+    Type: String
+    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVP2e6HpBEXw2fGB6dV+3YK1NQFx2ARVVJRnV3sH8KSI2BCm/zFL6z/seNirAvQsWlQ6hL1slmwWvMJQoAVUBEMUUlsVv55wb0HI0fA2YDS/qk8uTGVmaqI+uBmKDM6Wrifv5Tqny63euGQlVV0BwseYfn82c/YWMBK6bbSWHjEVVvXMUdIyQVAajBOmOhT/NyCW9iOATTO1O3A7HVvNEj16sFHd7l8GfjCqqptoTl8KU1IRY0vnn36DsEScJFyYesa6LVMrFmKryfTkliSQURsJ858dYM2EfsZUhXt3zMqpcunJJ7BfS2o7CENOF79emyMkAHZ00FK9mlFx+Hj02j kgadmin batch server key
+
+
 
   KeyName:
     Description: Keypair name
@@ -115,7 +120,7 @@ Resources:
               # view results of this script at  /var/log/cloud-init-output.log
             - USERNAME: !Ref UserName
               SSHKEY: !Ref SSHPublicKey
-              SSHKEY_BATCH_SERVER: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGPBr+GV20jEZSoqm+4mhnL32Fk8qNoztsCY0xoxmNtRbpgQW/l6gi8dxVbvWKTAWfAsPePlFybvBa8blyz0IRbBet8MDWHuzlT/c/RYGSML6dmeb7FvHcfWogLXeVbDn+L5uy0RGAv878coB0QyM379lMCIeHi3+SvWfUKx8RhbVkXomADyP+MydzrnbLcH0QDC6biSN561aNuEgQZlTlCTV65o+s71EOQbUd9pY89BdlDJaObj3hM8oZPv45NEIsoRNqh4wKCJM6Ycl11dsW3cPmCemc2LVHmI3dutxXldpwFiA5aAAQiIecMbFZpR8cO4P9bMzimiNCwnHEpSBR
+              SSHKEY_BATCH_SERVER: !Ref BatchServerPublicKey
               EFSID:
                 Fn::ImportValue:
                   !Sub "kgraph-${ENV}-EFSId"

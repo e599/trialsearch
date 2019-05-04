@@ -10,7 +10,6 @@ Parameters:
 
   SSHPublicKey:
     Type: String
-    Default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin
 
   KeyName:
     Description: Keypair name
@@ -82,8 +81,8 @@ Resources:
               # restart docker on reboot
               sudo cat > /etc/rc.local << EOF
               #!/bin/bash -e
-              if [ -d "/home/kgadmin/code/e599-KGraph/api/KnowledgeGraph/KnowledgeGraph" ]; then
-                cd /home/kgadmin/code/e599-KGraph/api/KnowledgeGraph/KnowledgeGraph
+              if [ -d "/home/kgadmin/code/trialsearch/api/KnowledgeGraph/KnowledgeGraph" ]; then
+                cd /home/kgadmin/code/trialsearch/api/KnowledgeGraph/KnowledgeGraph
                 docker start \`docker ps -q -l\`
               fi
               exit 0

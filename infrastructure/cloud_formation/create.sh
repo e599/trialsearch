@@ -6,7 +6,7 @@
 PUBLICKEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7i89gJtg/TtfV8w47hoi7gdpqEwxWt54EdY4h8uPesrgZPMW87Y8sSsuvoAu3JNrQaqpjdwiSWMxhMKWMxURzQKr+jr06TDvtPBlLVPXJe/SU1IHgTR9oL9eGJ57od8Y0XQ99DvVamha7Fr+o7f9KpxQktCS38QY6WKP0oyNHrexpXJo+2l1P0ysRi9FNwkoQdlT0KPt/uHZhoNtmlZcUYVCx+XmnQKQpLvFmmIoeqPK4lOe3GOz+0/oK7V4KZJIYTDVY0MOZa8rh9/+Gjucjz9WTDRDCo7LONQUYXfy34OWuXWTVuN7pcPTH7hS8XjcIv4yTufvoavyhM5+H9Vf7 kgadmin"
 
 # Set env for provisioning an environment (example STAGE OR PROD)
-KG_ENV=TEST
+KG_ENV=PROD
 
 #create vpc stack followed by ec2s for api server, batch server and the graphdb
 aws cloudformation create-stack --stack-name kgraph-vpc-"$KG_ENV" --template-body file://vpc.yaml --parameters  ParameterKey=ENV,ParameterValue="$KG_ENV"
