@@ -399,7 +399,7 @@
       "publicPath": "static/chunks/commons.59e639d3d815a5ae1936.js"
     }
   ],
-  "../../modules/es6.string.iterator": [
+  "../modules/es6.string.iterator": [
     {
       "id": 69,
       "name": "./node_modules/core-js/library/modules/es6.string.iterator.js",
@@ -857,7 +857,7 @@
       "publicPath": "static/chunks/commons.59e639d3d815a5ae1936.js"
     }
   ],
-  "./../../../process/browser.js": [
+  "./../../process/browser.js": [
     {
       "id": 135,
       "name": "./node_modules/process/browser.js",

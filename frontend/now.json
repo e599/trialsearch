@@ -1,6 +1,13 @@
 {
   "version": 2,
+  "name": "frontend",
   "builds": [
-    { "src": "package.json", "use": "@now/next" }
-  ]
+      { "src": "www/package.json", "use": "@now/next" },
+      { "src": "proxy/*.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/proxy", "dest": "/proxy" },
+    { "src": "/(.*)", "dest": "/www/$1", "headers": { "x-request-path": "$1" } }
+  ],
+  "alias": "trialsearch.net"
 }

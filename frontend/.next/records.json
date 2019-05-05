@@ -22,29 +22,6 @@
       }
     }
   ],
-  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/button/style/index.less": [
-    {
-      "modules": {
-        "byIdentifier": {
-          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/button/style/index.less": 0,
-          "node_modules/css-loader/lib/css-base.js": 1
-        },
-        "usedIds": {
-          "0": 0,
-          "1": 1
-        }
-      },
-      "chunks": {
-        "byName": {
-          "mini-css-extract-plugin": 0
-        },
-        "bySource": {},
-        "usedIds": [
-          0
-        ]
-      }
-    }
-  ],
   "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/icon/style/index.less": [
     {
       "modules": {
@@ -68,11 +45,11 @@
       }
     }
   ],
-  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/badge/style/index.less": [
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/button/style/index.less": [
     {
       "modules": {
         "byIdentifier": {
-          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/badge/style/index.less": 0,
+          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/button/style/index.less": 0,
           "node_modules/css-loader/lib/css-base.js": 1
         },
         "usedIds": {
@@ -114,11 +91,34 @@
       }
     }
   ],
-  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/skeleton/style/index.less": [
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/badge/style/index.less": [
     {
       "modules": {
         "byIdentifier": {
-          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/skeleton/style/index.less": 0,
+          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/badge/style/index.less": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/tag/style/index.less": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/tag/style/index.less": 0,
           "node_modules/css-loader/lib/css-base.js": 1
         },
         "usedIds": {
@@ -160,11 +160,11 @@
       }
     }
   ],
-  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/divider/style/index.less": [
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/skeleton/style/index.less": [
     {
       "modules": {
         "byIdentifier": {
-          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/divider/style/index.less": 0,
+          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/skeleton/style/index.less": 0,
           "node_modules/css-loader/lib/css-base.js": 1
         },
         "usedIds": {
@@ -183,11 +183,11 @@
       }
     }
   ],
-  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/tag/style/index.less": [
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/divider/style/index.less": [
     {
       "modules": {
         "byIdentifier": {
-          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/tag/style/index.less": 0,
+          "node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/divider/style/index.less": 0,
           "node_modules/css-loader/lib/css-base.js": 1
         },
         "usedIds": {
@@ -302,7 +302,7 @@
     "byIdentifier": {
       "node_modules/next/node_modules/prop-types/index.js": 0,
       "node_modules/react/index.js": 1,
-      "node_modules/@emotion/core/dist/core.browser.esm.js 5a475192e592051edab470814efbf709": 2,
+      "node_modules/@emotion/core/dist/core.browser.esm.js b73c9c44856f7b4c13525da8c7ce8bfc": 2,
       "node_modules/babel-runtime/helpers/extends.js": 3,
       "node_modules/classnames/index.js": 4,
       "node_modules/babel-runtime/helpers/possibleConstructorReturn.js": 5,
@@ -313,7 +313,7 @@
       "node_modules/ramda/es/internal/_curry1.js": 10,
       "node_modules/ramda/es/internal/_isPlaceholder.js": 11,
       "node_modules/core-js/library/modules/_core.js": 12,
-      "node_modules/@emotion/styled/dist/styled.browser.esm.js 086259548f9ccfcb39defb864f6159b2": 13,
+      "node_modules/@emotion/styled/dist/styled.browser.esm.js f0d3123a219912bf10bd7ca6f45f6deb": 13,
       "node_modules/antd/lib/config-provider/index.js": 14,
       "node_modules/ramda/es/internal/_curry2.js": 15,
       "node_modules/core-js/library/modules/_export.js": 16,
@@ -326,8 +326,8 @@
       "node_modules/antd/lib/icon/index.js": 23,
       "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--6-1!node_modules/less-loader/dist/cjs.js??ref--6-2!node_modules/antd/lib/style/index.less": 24,
       "node_modules/axios/lib/utils.js": 25,
-      "node_modules/rc-animate/es/Animate.js 492c0c2c80c296291ea5cdea55c1167c": 26,
-      "node_modules/react-spring/web.js b3d1303fff6c8c65de8dc69cdc2d5c6b": 27,
+      "node_modules/rc-animate/es/Animate.js c7139eea1ce9d2bda26cdd34f677885f": 26,
+      "node_modules/react-spring/web.js 364e50b4df8ab77b9a771ed1c60411a1": 27,
       "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!api/wireModels.ts": 28,
       "node_modules/core-js/library/modules/_an-object.js": 29,
       "node_modules/antd/lib/select/index.js": 30,
@@ -338,7 +338,7 @@
       "node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js": 35,
       "node_modules/shallowequal/index.js": 36,
       "node_modules/mini-store/lib/index.js": 37,
-      "node_modules/@emotion/serialize/dist/serialize.browser.esm.js c7b8abe7a49578c67dd4757c774ea687": 38,
+      "node_modules/@emotion/serialize/dist/serialize.browser.esm.js afa2f98a499628ca3253cb9c7f4cd624": 38,
       "node_modules/@emotion/utils/dist/utils.browser.esm.js": 39,
       "node_modules/core-js/library/modules/_fails.js": 40,
       "node_modules/core-js/library/modules/_ctx.js": 41,
@@ -353,14 +353,14 @@
       "node_modules/core-js/library/modules/_a-function.js": 50,
       "node_modules/@babel/runtime-corejs2/helpers/defineProperty.js": 51,
       "node_modules/ramda/es/internal/_has.js": 52,
-      "node_modules/rc-trigger/es/index.js 76409fc021f1f55d1921dc3e3fbbb9b0": 53,
+      "node_modules/rc-trigger/es/index.js db512915c79032d6e590dc727183448f": 53,
       "node_modules/@babel/runtime-corejs2/helpers/interopRequireWildcard.js": 54,
       "node_modules/@babel/runtime-corejs2/core-js/promise.js": 55,
       "node_modules/next/dist/lib/utils.js": 56,
       "node_modules/omit.js/es/index.js": 57,
-      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!api/trialsResource.ts 9029318d98f6a4e4793cc4519ab1face": 58,
+      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!api/trialsResource.ts 67eeddaf3a3cce3e75751cb4c04da524": 58,
       "node_modules/ramda/es/internal/_isString.js": 59,
-      "node_modules/css-animation/es/index.js 9a6a60377f8689e095e2696ae1b590bc": 60,
+      "node_modules/css-animation/es/index.js 6cffefb709c64a8c14f8c02a791b0258": 60,
       "node_modules/react-cache/index.js": 61,
       "node_modules/core-js/library/modules/_cof.js": 62,
       "node_modules/@babel/runtime-corejs2/helpers/objectSpread.js": 63,
@@ -441,14 +441,14 @@
       "node_modules/antd/lib/radio/radio.js": 138,
       "node_modules/axios/lib/defaults.js": 139,
       "node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js": 140,
-      "node_modules/ramda/es/keys.js b726ced58c0c918d03321f4a81d83095": 141,
+      "node_modules/ramda/es/keys.js 2a75cd604ff2991d52ef55803dd5b180": 141,
       "node_modules/next/dynamic.js": 142,
       "node_modules/antd/lib/collapse/index.js": 143,
       "node_modules/react-is/index.js": 144,
       "node_modules/ramda/es/index.js": 145,
       "node_modules/antd/lib/button/style/index.js": 146,
       "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!search/components/PageContext.tsx": 147,
-      "node_modules/ramda/es/internal/_reduce.js 523b97befe49960f5a22bb770a348bfd": 148,
+      "node_modules/ramda/es/internal/_reduce.js 250fff1a9915c46e11595cb0eef3aa27": 148,
       "node_modules/@babel/runtime-corejs2/core-js/object/get-own-property-descriptor.js": 149,
       "node_modules/core-js/library/modules/_ie8-dom-define.js": 150,
       "node_modules/core-js/library/fn/object/define-property.js": 151,
@@ -500,8 +500,8 @@
       "node_modules/axios/lib/core/createError.js": 197,
       "node_modules/axios/lib/cancel/isCancel.js": 198,
       "node_modules/axios/lib/cancel/Cancel.js": 199,
-      "node_modules/rc-collapse/es/index.js fc9f925a57be7d5f01ab9aa55a5fb7a2": 200,
-      "node_modules/@ant-design/icons-react/es/index.js 47054a5e4139429c7707dab116060d21": 201,
+      "node_modules/rc-collapse/es/index.js 369b2c794fba75982c3e03c495fd469d": 200,
+      "node_modules/@ant-design/icons-react/es/index.js 5b591847ad343ef8ca66f5f0c4bf30f4": 201,
       "node_modules/next/link.js": 202,
       "node_modules/ant-design-palettes/lib/index.js": 203,
       "node_modules/add-dom-event-listener/lib/index.js": 204,
@@ -724,15 +724,15 @@
       "node_modules/next/app.js": 421,
       "node_modules/next/dist/lib/app.js": 422,
       "node_modules/@babel/runtime-corejs2/helpers/extends.js": 423,
-      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!pages/search.tsx 970f3af3fd3dbdb89c9579bb09ab2fab": 424,
-      "node_modules/rc-select/es/index.js 206cc39265cab683732e8bc0aea83b25": 425,
-      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!map/Map.tsx 00d5141eefeea29e920dee8d9353220b": 426,
-      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!search/components/SearchResults.tsx 7856cd92568b0f2ce19773da248b3754": 427,
-      "node_modules/rc-tooltip/es/index.js 82447d6a0ae6c75fa8c852a6c03467f1": 428,
-      "node_modules/rc-checkbox/es/index.js 66edccc6fbec84b3e60f63befb04467b": 429,
-      "node_modules/ramda/es/equals.js ac7575eef1d6bd7c5072e6cf892da9e0": 430,
-      "node_modules/ramda/es/propOr.js e483eb445b32679230250c135ba6cae7": 431,
-      "node_modules/ramda/es/flatten.js af5538046266bd55b3d668cb8b8c9a9a": 432,
+      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!pages/search.tsx 7a982357f4ca2d9e4da33635ea2b2f67": 424,
+      "node_modules/rc-select/es/index.js 86c2ffa61aa217e671c884e3deb15059": 425,
+      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!map/Map.tsx e4a82266de666e68924bd93149badb16": 426,
+      "node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!search/components/SearchResults.tsx b7f8589499a7fc5e4505a8f58a5987e4": 427,
+      "node_modules/rc-tooltip/es/index.js 4a225452a02f151fa629271065cac083": 428,
+      "node_modules/rc-checkbox/es/index.js 4d2cbca842d5ece8ed89d42e713204d0": 429,
+      "node_modules/ramda/es/equals.js 40d65036465c7dbf05ddee8d2ba57f31": 430,
+      "node_modules/ramda/es/propOr.js e51bac90382cfbc3018bc3d7baff23a2": 431,
+      "node_modules/ramda/es/flatten.js b6302a62651392ab2f2f685628665f4b": 432,
       "node_modules/ramda/es/F.js": 433,
       "node_modules/ramda/es/T.js": 434,
       "node_modules/ramda/es/__.js": 435,
@@ -1724,10 +1724,10 @@
       "static/runtime/webpack.js": 1,
       "styles": 2,
       "static/runtime/main.js": 3,
-      "static/_iZ4B4OVLrjU1bGCME_Mo/pages/_error.js": 4,
-      "static/_iZ4B4OVLrjU1bGCME_Mo/pages/index.js": 5,
-      "static/_iZ4B4OVLrjU1bGCME_Mo/pages/search.js": 6,
-      "static/_iZ4B4OVLrjU1bGCME_Mo/pages/_app.js": 7
+      "static/zX0M6P~IyDsASjrzIaeLe/pages/_error.js": 4,
+      "static/zX0M6P~IyDsASjrzIaeLe/pages/index.js": 5,
+      "static/zX0M6P~IyDsASjrzIaeLe/pages/search.js": 6,
+      "static/zX0M6P~IyDsASjrzIaeLe/pages/_app.js": 7
     },
     "bySource": {
       "0 node_modules/next/dist/build/webpack/loaders/next-babel-loader.js??ref--5!pages/search.tsx ../map/Map": 8,

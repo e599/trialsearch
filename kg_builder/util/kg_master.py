@@ -34,7 +34,7 @@ def ct_init():
     download_src_files = get_sys_config('download_src_files', kg_env)
     download_url = get_sys_config('download_url', kg_env)
 
-    if download_src_files == 'True':
+    if download_src_files:
 
         # Downloads the file from the web (and overwrites, if necessary).
         print("Downloading source files...")
